@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Остаповец](https://up.htmlacademy.ru/javascript/10/user/288419).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Алексеев](https://htmlacademy.ru/profile/id4596).
 
 ---
 
