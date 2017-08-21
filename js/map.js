@@ -5,6 +5,7 @@
   var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var OFFER_TYPES = ['flat', 'house', 'bungalo'];
   var OFFER_TIMES = ['12:00', '13:00', '14:00'];
+  var OFFER_FEAUTERES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
   var getRandomArrayPos = function (array) {
     var arrayPos = Math.floor(Math.random() * array.length);
@@ -26,6 +27,17 @@
     return randomNumber;
   };
 
+  var getRandomItems = function (array) {
+    var randomItemsCount = getRandomNumber(1, array.length);
+    var randomItems = [];
+
+    for (var j = 0; j < randomItemsCount; j++) {
+      randomItems.push(getArrayElement(array));
+    }
+
+    return randomItems;
+  };
+
 
   var similarStickers = [
     {
@@ -36,14 +48,16 @@
       offer: {
         title: getArrayElement(OFFER_TITLES),
         // address: '' + location:x + ', ' + location.y + '' /*строка, адрес предложения, представляет собой запись вида "{{location.x}}, {{location.y}}"*/
-        // address:  offer['title'],
+        // address:  '' + getRandomNumber(300, 900) + ', ' + getRandomNumber(100, 500) + '',
+        // address: `${{location:x}}`,
+        // address: getLocationPosition(),
         price: getRandomNumber(1000, 1000000),
         type: getArrayElement(OFFER_TYPES),
         rooms: getRandomNumber(1, 5),
         guests: getRandomNumber(1, 10),
         checkin: getArrayElement(OFFER_TIMES),
         checkout: getArrayElement(OFFER_TIMES),
-        // features: массив строк случайной длины из ниже предложенных: "wifi", "dishwasher", "parking", "washer", "elevator", "conditioner",
+        features: getRandomItems(OFFER_FEAUTERES),
         description: '',
         photos: []
       },
@@ -55,8 +69,9 @@
     }
   ];
 
+  console.log(similarStickers[0].location.x);
   similarStickers
       .forEach(function (sticker) {
-        console.log(sticker)
+        console.log(sticker);
       });
 })();
