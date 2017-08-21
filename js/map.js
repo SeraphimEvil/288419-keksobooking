@@ -6,25 +6,23 @@
   var OFFER_TYPES = ['flat', 'house', 'bungalo'];
   var OFFER_TIMES = ['12:00', '13:00', '14:00'];
 
-  var getArrayPos = function (array) {
+  var getRandomArrayPos = function (array) {
     var arrayPos = Math.floor(Math.random() * array.length);
     return arrayPos;
   };
 
-  var removeElement = function (element, array) {
-    array.splice(element, 1);
+  var removeElement = function (elementIndex, array) {
+    return array.splice(elementIndex, 1);
   };
 
   var getArrayElement = function (array) {
-    var arrayListPos = getArrayPos(array);
-    var arrayElement = array[arrayListPos];
-    removeElement(arrayListPos, array);
+    var arrayListPos = getRandomArrayPos(array);
+    var arrayElement = removeElement(arrayListPos, array);
     return arrayElement;
   };
 
   var getRandomNumber = function (min, max) {
-    var randomNumber = min + Math.random() * (max + 1 - min);
-    randomNumber = Math.floor(randomNumber);
+    var randomNumber = Math.floor(min + Math.random() * (max + 1 - min));
     return randomNumber;
   };
 
@@ -56,7 +54,6 @@
       }
     }
   ];
-
 
   similarStickers
       .forEach(function (sticker) {
