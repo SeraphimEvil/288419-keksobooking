@@ -7,24 +7,16 @@
   var OFFER_TIMES = ['12:00', '13:00', '14:00'];
   var OFFER_FEAUTERES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
+  var stickerMap = document.querySelector('.tokyo__pin-map');
+  var similarStickerElement = stickerMap.querySelector('.dialog__panel');
+  var similarStickerTemplate = document.querySelector('#lodge-template').content;
+
   var getRandomArrayPos = function (array) {
-    var arrayPos = Math.floor(Math.random() * array.length);
-    return arrayPos;
-  };
-
-  var removeElement = function (elementIndex, array) {
-    return array.splice(elementIndex, 1);
-  };
-
-  var getArrayElement = function (array) {
-    var arrayListPos = getRandomArrayPos(array);
-    var arrayElement = removeElement(arrayListPos, array);
-    return arrayElement;
+    return Math.floor(Math.random() * array.length);
   };
 
   var getRandomNumber = function (min, max) {
-    var randomNumber = Math.floor(min + Math.random() * (max + 1 - min));
-    return randomNumber;
+    return Math.floor(min + Math.random() * (max + 1 - min));
   };
 
   var getRandomItems = function (array) {
@@ -38,19 +30,24 @@
     return randomItems;
   };
 
+  var getArrayElement = function (array) {
+    var arrayListPos = getRandomArrayPos(array);
+    var arrayElement = removeElement(arrayListPos, array);
+    return arrayElement;
+  };
 
-  var similarStickers = [
-    {
+  var removeElement = function (elementIndex, array) {
+    return array.splice(elementIndex, 1);
+  };
+
+  var getSimilarSticker = function () {
+    var similarSticker = {
       author: {
         avatar: 'img/avatars/user' + getArrayElement(AUTHOR_AVATARS) + '.png'
       },
-
       offer: {
         title: getArrayElement(OFFER_TITLES),
-        // address: '' + location:x + ', ' + location.y + '' /*строка, адрес предложения, представляет собой запись вида "{{location.x}}, {{location.y}}"*/
-        // address:  '' + getRandomNumber(300, 900) + ', ' + getRandomNumber(100, 500) + '',
-        // address: `${{location:x}}`,
-        // address: getLocationPosition(),
+        address: '' + getRandomNumber(300, 900) + ', ' + getRandomNumber(100, 500) + '',
         price: getRandomNumber(1000, 1000000),
         type: getArrayElement(OFFER_TYPES),
         rooms: getRandomNumber(1, 5),
@@ -61,17 +58,28 @@
         description: '',
         photos: []
       },
-
       location: {
         x: getRandomNumber(300, 900),
         y: getRandomNumber(100, 500)
       }
-    }
-  ];
+    };
+    return similarSticker;
+  };
 
-  console.log(similarStickers[0].location.x);
-  similarStickers
-      .forEach(function (sticker) {
-        console.log(sticker);
-      });
+  var getFragment = function () {
+    return document.createDocumentFragment();
+  };
+
+  var renderSticker = function (sticker) {
+    var stickerElement = similarStickerTemplate.cloneNode(true);
+    stickerElement.querySelector('.lodge__title').textContent = sticker.offer.title;
+
+    return stickerElement;
+  };
+
+  for (var i = 0; i < 8; i++) {
+    var fragment = getFragment();
+    fragment.appendChild(renderSticker(getSimilarSticker()));
+    similarStickerElement.appendChild(fragment);
+  }
 })();
