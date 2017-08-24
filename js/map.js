@@ -1,15 +1,19 @@
 'use strict';
 
 (function () {
-  var AUTHOR_AVATARS = ['01', '02', '03', '04', '05', '06', '07', '08'];
-  var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-  var OFFER_TYPES = ['flat', 'house', 'bungalo'];
-  var OFFER_TIMES = ['12:00', '13:00', '14:00'];
-  var OFFER_FEAUTERES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var authorAvatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
+  var offerTitles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+  var offerTypes = ['flat', 'house', 'bungalo'];
+  var offerTimes = ['12:00', '13:00', '14:00'];
+  var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
-  var stickerMap = document.querySelector('.tokyo__pin-map');
-  var similarStickerElement = stickerMap.querySelector('.dialog__panel');
-  var similarStickerTemplate = document.querySelector('#lodge-template').content;
+  var PINS_COUNT = authorAvatars.length;
+  var pinMap = document.querySelector('.tokyo__pin-map');
+  var similarPinElement = pinMap.querySelector('.dialog__panel');
+  var similarPinTemplate = document.querySelector('#lodge-template').content;
+  var fragment = document.createDocumentFragment();
+
+  console.log(similarPinElement)
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -36,50 +40,84 @@
     return arrayElement;
   };
 
+  var getRandomArrayElement = function (array) {
+    return array[getRandomArrayPos(array)];
+  };
+
   var removeElement = function (elementIndex, array) {
     return array.splice(elementIndex, 1);
   };
 
-  var getSimilarSticker = function () {
-    var similarSticker = {
+  var getSimilarPin = function () {
+    var locationX = getRandomNumber(300, 900);
+    var locationY = getRandomNumber(100, 500);
+
+    return {
       author: {
-        avatar: 'img/avatars/user' + getArrayElement(AUTHOR_AVATARS) + '.png'
+        avatar: 'img/avatars/user' + getArrayElement(authorAvatars) + '.png'
       },
       offer: {
-        title: getArrayElement(OFFER_TITLES),
-        address: '' + getRandomNumber(300, 900) + ', ' + getRandomNumber(100, 500) + '',
+        title: getArrayElement(offerTitles),
+        address: '' + locationX + ', ' + locationY + '',
         price: getRandomNumber(1000, 1000000),
-        type: getArrayElement(OFFER_TYPES),
+        type: getRandomArrayElement(offerTypes),
         rooms: getRandomNumber(1, 5),
         guests: getRandomNumber(1, 10),
-        checkin: getArrayElement(OFFER_TIMES),
-        checkout: getArrayElement(OFFER_TIMES),
-        features: getRandomItems(OFFER_FEAUTERES),
+        checkin: getRandomArrayElement(offerTimes),
+        checkout: getRandomArrayElement(offerTimes),
+        features: getRandomItems(offerFeauteres),
         description: '',
         photos: []
       },
       location: {
-        x: getRandomNumber(300, 900),
-        y: getRandomNumber(100, 500)
+        x: locationX,
+        y: locationY
       }
     };
-    return similarSticker;
   };
 
-  var getFragment = function () {
-    return document.createDocumentFragment();
+  var getPinOfferTypeTranslate = function (offerType) {
+    if (offerType == 'flat') {
+      offerType = 'Квартира';
+    } else if (offerType == 'house') {
+      offerType = 'Дом';
+    } else {
+      offerType = 'Бунгало';
+    }
+
+    return offerType;
   };
 
-  var renderSticker = function (sticker) {
-    var stickerElement = similarStickerTemplate.cloneNode(true);
-    stickerElement.querySelector('.lodge__title').textContent = sticker.offer.title;
-
-    return stickerElement;
+  var renderPinOfferFeauteres = function (features) {
+    var featuresElement = '';
+    features
+        .forEach(function (feature) {
+          featuresElement += '<span class="feature__image feature__image--' + feature + '"></span>';
+        });
+    return featuresElement;
+    // return features.reduce(function (a, b, feature) {
+    //   return a + b;
+    // }, 0);
   };
 
-  for (var i = 0; i < 8; i++) {
-    var fragment = getFragment();
-    fragment.appendChild(renderSticker(getSimilarSticker()));
-    similarStickerElement.appendChild(fragment);
+  var renderPin = function (pin) {
+    var pinElement = similarPinTemplate.cloneNode(true);
+
+    pinElement.querySelector('.lodge__title').textContent = pin.offer.title;
+    pinElement.querySelector('.lodge__address').textContent = pin.offer.address;
+    pinElement.querySelector('.lodge__price').textContent = '' + pin.offer.price +'&#x20bd;/ночь';
+    pinElement.querySelector('.lodge__type').textContent = getPinOfferTypeTranslate(pin.offer.type);
+    pinElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
+    pinElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout + '';
+    pinElement.querySelector('.lodge__features').innerHTML = renderPinOfferFeauteres(pin.offer.features);
+    pinElement.querySelector('.lodge__description').innerHTML = pin.offer.description;
+
+    return pinElement;
+  };
+
+  for (var i = 0; i < PINS_COUNT; i++) {
+    fragment.appendChild(renderPin(getSimilarPin()));
+    console.log(fragment)
+    similarPinElement.appendChild(fragment);
   }
 })();
