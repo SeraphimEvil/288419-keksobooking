@@ -8,11 +8,19 @@
   var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
   var PINS_COUNT = authorAvatars.length;
+  // карта токио
   var pinMap = document.querySelector('.tokyo__pin-map');
+
   var similarPinElement = pinMap.querySelector('.dialog__panel');
+
+  //шаблон диалога
   var similarPinTemplate = document.querySelector('#lodge-template').content;
+
+
+
   var fragment = document.createDocumentFragment();
 
+  // console.log(similarPinTemplate)
   console.log(similarPinElement)
 
   var getRandomArrayPos = function (array) {
@@ -89,16 +97,21 @@
   };
 
   var renderPinOfferFeauteres = function (features) {
-    var featuresElement = '';
-    features
-        .forEach(function (feature) {
-          featuresElement += '<span class="feature__image feature__image--' + feature + '"></span>';
-        });
-    return featuresElement;
-    // return features.reduce(function (a, b, feature) {
-    //   return a + b;
-    // }, 0);
+    // return features.reduce(function (sum, current) {
+    //   current = '<span class="feature__image feature__image--' + current + '"></span>';
+    //   return sum + current;
+    // }, '');
+    var arrMap = features.map(function (item) {
+      return '<span class="feature__image feature__image--' + item + '"></span>';
+    });
+    return arrMap.join('');
   };
+
+  // var renderPinMarker = function (pin) {
+  //   // var pinMarker = fragment.cloneNode(true);
+
+  //   // fragment.appendChild(pin.location.x)
+  // };
 
   var renderPin = function (pin) {
     var pinElement = similarPinTemplate.cloneNode(true);
@@ -115,9 +128,15 @@
     return pinElement;
   };
 
+  // for (var i = 0; i < PINS_COUNT; i++) {
+  //   fragment.appendChild(renderPinMarker(getSimilarPin()));
+  // }
+
   for (var i = 0; i < PINS_COUNT; i++) {
     fragment.appendChild(renderPin(getSimilarPin()));
-    console.log(fragment)
+
     similarPinElement.appendChild(fragment);
   }
+
+  console.log(fragment)
 })();
