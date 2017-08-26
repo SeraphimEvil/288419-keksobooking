@@ -79,12 +79,14 @@
   var getPinOfferTypeTranslate = function (offerType) {
     switch (offerType) {
       case 'flat':
-        return 'Квартира';
+        offerType = 'Квартира';
       case 'house':
-        return 'Дом';
+        offerType = 'Дом';
       case 'bungalo':
-        return 'Бунгало';
+        offerType = 'Бунгало';
     }
+
+    return offerType;
   };
 
   var renderPinOfferFeauteres = function (features) {
