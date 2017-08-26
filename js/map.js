@@ -14,9 +14,10 @@
   var pinTemplate = document.querySelector('#pin-template').content;
   var lodgeTemplate = document.querySelector('#lodge-template').content;
   var pinMap = document.querySelector('.tokyo__pin-map');
-  var similarPinElement = document.querySelector('.dialog__panel');
+  var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
+  var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
   var fragment = document.createDocumentFragment();
-
+  var pinMarkerArr = [];
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -80,9 +81,9 @@
   };
 
   var getPinOfferTypeTranslate = function (offerType) {
-    if (offerType == 'flat') {
+    if (offerType === 'flat') {
       offerType = 'Квартира';
-    } else if (offerType == 'house') {
+    } else if (offerType === 'house') {
       offerType = 'Дом';
     } else {
       offerType = 'Бунгало';
@@ -99,45 +100,53 @@
 
   var renderPinMarker = function (pin) {
     var pinMarker = pinTemplate.cloneNode(true);
+    var pinMarkerLocationX = pin.location.x + PIN_LOCATION_X_CORRECTION;
+    var pinMarkerLocationY = pin.location.y - PIN_LOCATION_Y_CORRECTION;
+    var pinMarkerAvatar = pin.author.avatar;
 
-    pinMarker.querySelector('.pin').setAttribute('style', 'left: ' +
-        (pin.location.x + PIN_LOCATION_X_CORRECTION) + 'px; top: ' +
-        (pin.location.y - PIN_LOCATION_Y_CORRECTION) + 'px;');
-    pinMarker.querySelector('img.rounded').setAttribute('src', '' + pin.author.avatar + '');
+    pinMarker.querySelector('.pin').style.left = pinMarkerLocationX + 'px';
+    pinMarker.querySelector('.pin').style.top = pinMarkerLocationY + 'px';
+    pinMarker.querySelector('img.rounded').src = pinMarkerAvatar;
+
+    pinMarkerArr.push(pin);
 
     return pinMarker;
   };
 
-  var renderPin = function (pin) {
+  var renderLodge = function (pin) {
     var lodgeElement = lodgeTemplate.cloneNode(true);
+    var lodgeTitle = pin.offer.title;
+    var lodgeAddress = pin.offer.address;
+    var lodgePrice = pin.offer.price;
+    var lodgeType = getPinOfferTypeTranslate(pin.offer.type);
+    var lodgeGuests = pin.offer.guests;
+    var lodgeRooms = pin.offer.rooms;
+    var lodgeCheckin = pin.offer.checkin;
+    var lodgeCheckout = pin.offer.checkout;
+    var lodgeFeatures = renderPinOfferFeauteres(pin.offer.features);
+    var lodgeDescription = pin.offer.description;
+    var lodgeAvatar = pin.author.avatar;
 
-    lodgeElement.querySelector('.lodge__title').textContent = pin.offer.title;
+    lodgeElement.querySelector('.lodge__title').textContent = lodgeTitle;
     lodgeElement.querySelector('.lodge__address').textContent = pin.offer.address;
-    lodgeElement.querySelector('.lodge__price').textContent = '' + pin.offer.price +'&#x20bd;/ночь';
-    lodgeElement.querySelector('.lodge__type').textContent = getPinOfferTypeTranslate(pin.offer.type);
-    lodgeElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
-    lodgeElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout + '';
-    lodgeElement.querySelector('.lodge__features').innerHTML = renderPinOfferFeauteres(pin.offer.features);
-    lodgeElement.querySelector('.lodge__description').innerHTML = pin.offer.description;
+    lodgeElement.querySelector('.lodge__price').innerHTML = lodgePrice + '  &#x20bd;/ночь';
+    lodgeElement.querySelector('.lodge__type').textContent = lodgeType;
+    lodgeElement.querySelector('.lodge__rooms-and-guests').textContent =
+          'Для ' + lodgeGuests + ' гостей в ' + lodgeRooms + ' комнатах';
+    lodgeElement.querySelector('.lodge__checkin-time').textContent =
+          'Заезд после ' + lodgeCheckin + ', выезд до ' + lodgeCheckout + '';
+    lodgeElement.querySelector('.lodge__features').innerHTML = lodgeFeatures;
+    lodgeElement.querySelector('.lodge__description').textContent = pin.offer.description;
+
+    lodgePanelAvatar.src = lodgeAvatar;
 
     return lodgeElement;
   };
 
   for (var i = 0; i < PINS_COUNT; i++) {
-    // отображаю иконки
     fragment.appendChild(renderPinMarker(getSimilarPin()));
     pinMap.appendChild(fragment);
-
-
-
-    // // как-то отображаю списки
-    // fragment.appendChild(renderPin(getSimilarPin()));
-    // similarPinElement.appendChild(fragment);
   }
 
-  // for (var i = 0; i < PINS_COUNT; i++) {
-  //   fragment.appendChild(renderPin(getSimilarPin()));
-  //   console.log(fragment)
-  //   similarPinElement.appendChild(fragment);
-  // }
+  lodgePanelElement.replaceWith(renderLodge(pinMarkerArr[0]));
 })();
