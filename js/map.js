@@ -80,8 +80,12 @@
     switch (offerType) {
       case 'flat':
         offerType = 'Квартира';
+        break;
+
       case 'house':
         offerType = 'Дом';
+        break;
+
       case 'bungalo':
         offerType = 'Бунгало';
     }
