@@ -128,7 +128,7 @@
     var lodgeAvatar = pin.author.avatar;
 
     lodgeElement.querySelector('.lodge__title').textContent = lodgeTitle;
-    lodgeElement.querySelector('.lodge__address').textContent = pin.offer.address;
+    lodgeElement.querySelector('.lodge__address').textContent = lodgeAddress;
     lodgeElement.querySelector('.lodge__price').innerHTML = lodgePrice + '  &#x20bd;/ночь';
     lodgeElement.querySelector('.lodge__type').textContent = lodgeType;
     lodgeElement.querySelector('.lodge__rooms-and-guests').textContent =
@@ -136,7 +136,7 @@
     lodgeElement.querySelector('.lodge__checkin-time').textContent =
           'Заезд после ' + lodgeCheckin + ', выезд до ' + lodgeCheckout + '';
     lodgeElement.querySelector('.lodge__features').innerHTML = lodgeFeatures;
-    lodgeElement.querySelector('.lodge__description').textContent = pin.offer.description;
+    lodgeElement.querySelector('.lodge__description').textContent = lodgeDescription;
 
     lodgePanelAvatar.src = lodgeAvatar;
 
