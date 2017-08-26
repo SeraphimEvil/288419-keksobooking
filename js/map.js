@@ -40,7 +40,7 @@
 
   var getArrayElement = function (array) {
     var arrayListPos = getRandomArrayPos(array);
-    var arrayElement = removeElement(arrayListPos, array);
+    var arrayElement = array.splice(arrayListPos, 1);
     return arrayElement;
   };
 
@@ -48,11 +48,7 @@
     return array[getRandomArrayPos(array)];
   };
 
-  var removeElement = function (elementIndex, array) {
-    return array.splice(elementIndex, 1);
-  };
-
-  var getSimilarPin = function () {
+  var createRandomPin = function () {
     var locationX = getRandomNumber(300, 900);
     var locationY = getRandomNumber(100, 500);
 
@@ -62,7 +58,7 @@
       },
       offer: {
         title: getArrayElement(offerTitles),
-        address: '' + locationX + ', ' + locationY + '',
+        address: locationX + ', ' + locationY,
         price: getRandomNumber(1000, 1000000),
         type: getRandomArrayElement(offerTypes),
         rooms: getRandomNumber(1, 5),
@@ -81,15 +77,14 @@
   };
 
   var getPinOfferTypeTranslate = function (offerType) {
-    if (offerType === 'flat') {
-      offerType = 'Квартира';
-    } else if (offerType === 'house') {
-      offerType = 'Дом';
-    } else {
-      offerType = 'Бунгало';
+    switch (offerType) {
+      case 'flat':
+        return 'Квартира';
+      case 'house':
+        return 'Дом';
+      case 'bungalo':
+        return 'Бунгало';
     }
-
-    return offerType;
   };
 
   var renderPinOfferFeauteres = function (features) {
@@ -102,13 +97,11 @@
     var pinMarker = pinTemplate.cloneNode(true);
     var pinMarkerLocationX = pin.location.x + PIN_LOCATION_X_CORRECTION;
     var pinMarkerLocationY = pin.location.y - PIN_LOCATION_Y_CORRECTION;
-    var pinMarkerAvatar = pin.author.avatar;
+    var markerPinSelector = pinMarker.querySelector('.pin');
 
-    pinMarker.querySelector('.pin').style.left = pinMarkerLocationX + 'px';
-    pinMarker.querySelector('.pin').style.top = pinMarkerLocationY + 'px';
-    pinMarker.querySelector('img.rounded').src = pinMarkerAvatar;
-
-    pinMarkerArr.push(pin);
+    markerPinSelector.style.left = pinMarkerLocationX + 'px';
+    markerPinSelector.style.top = pinMarkerLocationY + 'px';
+    pinMarker.querySelector('img.rounded').src = pin.author.avatar;
 
     return pinMarker;
   };
@@ -117,36 +110,33 @@
     var lodgeElement = lodgeTemplate.cloneNode(true);
     var lodgeTitle = pin.offer.title;
     var lodgeAddress = pin.offer.address;
-    var lodgePrice = pin.offer.price;
+    var lodgePrice = pin.offer.price + '  &#x20bd;/ночь';
     var lodgeType = getPinOfferTypeTranslate(pin.offer.type);
-    var lodgeGuests = pin.offer.guests;
-    var lodgeRooms = pin.offer.rooms;
-    var lodgeCheckin = pin.offer.checkin;
-    var lodgeCheckout = pin.offer.checkout;
+    var lodgeGuestsAndRooms = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
+    var lodgeCheckinCheckout = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
     var lodgeFeatures = renderPinOfferFeauteres(pin.offer.features);
     var lodgeDescription = pin.offer.description;
-    var lodgeAvatar = pin.author.avatar;
 
     lodgeElement.querySelector('.lodge__title').textContent = lodgeTitle;
     lodgeElement.querySelector('.lodge__address').textContent = lodgeAddress;
-    lodgeElement.querySelector('.lodge__price').innerHTML = lodgePrice + '  &#x20bd;/ночь';
+    lodgeElement.querySelector('.lodge__price').innerHTML = lodgePrice;
     lodgeElement.querySelector('.lodge__type').textContent = lodgeType;
-    lodgeElement.querySelector('.lodge__rooms-and-guests').textContent =
-          'Для ' + lodgeGuests + ' гостей в ' + lodgeRooms + ' комнатах';
-    lodgeElement.querySelector('.lodge__checkin-time').textContent =
-          'Заезд после ' + lodgeCheckin + ', выезд до ' + lodgeCheckout + '';
+    lodgeElement.querySelector('.lodge__rooms-and-guests').textContent = lodgeGuestsAndRooms;
+    lodgeElement.querySelector('.lodge__checkin-time').textContent = lodgeCheckinCheckout;
     lodgeElement.querySelector('.lodge__features').innerHTML = lodgeFeatures;
     lodgeElement.querySelector('.lodge__description').textContent = lodgeDescription;
-
-    lodgePanelAvatar.src = lodgeAvatar;
 
     return lodgeElement;
   };
 
   for (var i = 0; i < PINS_COUNT; i++) {
-    fragment.appendChild(renderPinMarker(getSimilarPin()));
-    pinMap.appendChild(fragment);
+    var currentPinMarker = createRandomPin();
+
+    fragment.appendChild(renderPinMarker(currentPinMarker));
+    lodgePanelAvatar.src = currentPinMarker.author.avatar;
+    pinMarkerArr.push(currentPinMarker);
   }
 
+  pinMap.appendChild(fragment);
   lodgePanelElement.replaceWith(renderLodge(pinMarkerArr[0]));
 })();
