@@ -103,10 +103,10 @@
     var pinMarker = pinTemplate.cloneNode(true);
     var pinMarkerLocationX = pin.location.x + PIN_LOCATION_X_CORRECTION;
     var pinMarkerLocationY = pin.location.y - PIN_LOCATION_Y_CORRECTION;
-    var markerPinSelector = pinMarker.querySelector('.pin');
+    var pinMarkerBlock = pinMarker.querySelector('.pin');
 
-    markerPinSelector.style.left = pinMarkerLocationX + 'px';
-    markerPinSelector.style.top = pinMarkerLocationY + 'px';
+    pinMarkerBlock.style.left = pinMarkerLocationX + 'px';
+    pinMarkerBlock.style.top = pinMarkerLocationY + 'px';
     pinMarker.querySelector('img.rounded').src = pin.author.avatar;
 
     return pinMarker;
