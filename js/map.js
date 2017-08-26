@@ -8,20 +8,15 @@
   var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
   var PINS_COUNT = authorAvatars.length;
-  // карта токио
+  var PIN_LOCATION_X_CORRECTION = 28;
+  var PIN_LOCATION_Y_CORRECTION = 75;
+
+  var pinTemplate = document.querySelector('#pin-template').content;
+  var lodgeTemplate = document.querySelector('#lodge-template').content;
   var pinMap = document.querySelector('.tokyo__pin-map');
-
-  var similarPinElement = pinMap.querySelector('.dialog__panel');
-
-  //шаблон диалога
-  var similarPinTemplate = document.querySelector('#lodge-template').content;
-
-
-
+  var similarPinElement = document.querySelector('.dialog__panel');
   var fragment = document.createDocumentFragment();
 
-  // console.log(similarPinTemplate)
-  console.log(similarPinElement)
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -97,46 +92,52 @@
   };
 
   var renderPinOfferFeauteres = function (features) {
-    // return features.reduce(function (sum, current) {
-    //   current = '<span class="feature__image feature__image--' + current + '"></span>';
-    //   return sum + current;
-    // }, '');
-    var arrMap = features.map(function (item) {
+    return features.map(function (item) {
       return '<span class="feature__image feature__image--' + item + '"></span>';
-    });
-    return arrMap.join('');
+    }).join('');
   };
 
-  // var renderPinMarker = function (pin) {
-  //   // var pinMarker = fragment.cloneNode(true);
+  var renderPinMarker = function (pin) {
+    var pinMarker = pinTemplate.cloneNode(true);
 
-  //   // fragment.appendChild(pin.location.x)
-  // };
+    pinMarker.querySelector('.pin').setAttribute('style', 'left: ' +
+        (pin.location.x + PIN_LOCATION_X_CORRECTION) + 'px; top: ' +
+        (pin.location.y - PIN_LOCATION_Y_CORRECTION) + 'px;');
+    pinMarker.querySelector('img.rounded').setAttribute('src', '' + pin.author.avatar + '');
+
+    return pinMarker;
+  };
 
   var renderPin = function (pin) {
-    var pinElement = similarPinTemplate.cloneNode(true);
+    var lodgeElement = lodgeTemplate.cloneNode(true);
 
-    pinElement.querySelector('.lodge__title').textContent = pin.offer.title;
-    pinElement.querySelector('.lodge__address').textContent = pin.offer.address;
-    pinElement.querySelector('.lodge__price').textContent = '' + pin.offer.price +'&#x20bd;/ночь';
-    pinElement.querySelector('.lodge__type').textContent = getPinOfferTypeTranslate(pin.offer.type);
-    pinElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
-    pinElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout + '';
-    pinElement.querySelector('.lodge__features').innerHTML = renderPinOfferFeauteres(pin.offer.features);
-    pinElement.querySelector('.lodge__description').innerHTML = pin.offer.description;
+    lodgeElement.querySelector('.lodge__title').textContent = pin.offer.title;
+    lodgeElement.querySelector('.lodge__address').textContent = pin.offer.address;
+    lodgeElement.querySelector('.lodge__price').textContent = '' + pin.offer.price +'&#x20bd;/ночь';
+    lodgeElement.querySelector('.lodge__type').textContent = getPinOfferTypeTranslate(pin.offer.type);
+    lodgeElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
+    lodgeElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout + '';
+    lodgeElement.querySelector('.lodge__features').innerHTML = renderPinOfferFeauteres(pin.offer.features);
+    lodgeElement.querySelector('.lodge__description').innerHTML = pin.offer.description;
 
-    return pinElement;
+    return lodgeElement;
   };
 
-  // for (var i = 0; i < PINS_COUNT; i++) {
-  //   fragment.appendChild(renderPinMarker(getSimilarPin()));
-  // }
-
   for (var i = 0; i < PINS_COUNT; i++) {
-    fragment.appendChild(renderPin(getSimilarPin()));
+    // отображаю иконки
+    fragment.appendChild(renderPinMarker(getSimilarPin()));
+    pinMap.appendChild(fragment);
 
-    similarPinElement.appendChild(fragment);
+
+
+    // // как-то отображаю списки
+    // fragment.appendChild(renderPin(getSimilarPin()));
+    // similarPinElement.appendChild(fragment);
   }
 
-  console.log(fragment)
+  // for (var i = 0; i < PINS_COUNT; i++) {
+  //   fragment.appendChild(renderPin(getSimilarPin()));
+  //   console.log(fragment)
+  //   similarPinElement.appendChild(fragment);
+  // }
 })();
