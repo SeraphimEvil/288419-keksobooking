@@ -168,12 +168,14 @@
   getPinMarkerElementsList();
 
   var setActive = function(item) {
+    dialog.classList.remove('hidden');
+
     if (isActive) {
       isActive.classList.remove('pin--active');
     }
 
     isActive = item;
-    isActive.classList.add('pin--active')
+    isActive.classList.add('pin--active');
   };
 
   var getPinNumber = function (item) {
@@ -199,12 +201,14 @@
   dialog.addEventListener('click', function (event) {
     var target = event.target;
     var targetClose = target.closest('a')
-    console.log(targetClose)
-    console.log(dialogClose)
+
     if (targetClose === dialogClose) {
-      console.log('крестик закрытия йоу')
+      event.preventDefault();
       dialog.classList.add('hidden');
-      isActive.classList.remove('pin--active')
+
+      if (isActive) {
+        isActive.classList.remove('pin--active');
+      }
     }
   });
 })();
