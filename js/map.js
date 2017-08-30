@@ -17,7 +17,11 @@
   var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
   var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
   var fragment = document.createDocumentFragment();
+  var dialog = document.querySelector('#offer-dialog');
+  var dialogClose = dialog.querySelector('.dialog__close');
   var pinMarkerArr = [];
+  var pinMarkerElementsList = [];
+  var isActive;
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -135,14 +139,72 @@
     return lodgeElement;
   };
 
-  for (var i = 0; i < PINS_COUNT; i++) {
-    var currentPinMarker = createRandomPin();
+  var setPinMarker = function () {
+    for (var i = 0; i < PINS_COUNT; i++) {
+      var currentPinMarker = createRandomPin();
 
-    fragment.appendChild(renderPinMarker(currentPinMarker));
-    lodgePanelAvatar.src = currentPinMarker.author.avatar;
-    pinMarkerArr.push(currentPinMarker);
-  }
+      fragment.appendChild(renderPinMarker(currentPinMarker));
+      pinMarkerArr.push(currentPinMarker);
+    }
 
-  pinMap.appendChild(fragment);
-  lodgePanelElement.replaceWith(renderLodge(pinMarkerArr[0]));
+    pinMap.appendChild(fragment);
+  };
+
+  var renderLodgeView = function (num) {
+    var lodgePanelItem = pinMarkerArr[num - 1] || pinMarkerArr[0];
+
+    lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
+    lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
+    lodgePanelAvatar.src = lodgePanelItem.author.avatar;
+  };
+
+  var getPinMarkerElementsList = function () {
+    var pinMarkerElementsNodeList = pinMap.querySelectorAll('.pin');
+    pinMarkerElementsList = Array.prototype.slice.call(pinMarkerElementsNodeList);
+  };
+
+  setPinMarker();
+  renderLodgeView();
+  getPinMarkerElementsList();
+
+  var setActive = function(item) {
+    if (isActive) {
+      isActive.classList.remove('pin--active');
+    }
+
+    isActive = item;
+    isActive.classList.add('pin--active')
+  };
+
+  var getPinNumber = function (item) {
+    var i = 0;
+
+    while (item = item.previousSibling) {
+        item.nodeType == 1 && i++;
+    }
+
+    return i;
+  };
+
+  pinMap.addEventListener('click', function (event) {
+    var target = event.target;
+    var targetPin = target.closest('div');
+
+    if (!targetPin) return;
+
+    renderLodgeView(getPinNumber(targetPin));
+    setActive(targetPin);
+  });
+
+  dialog.addEventListener('click', function (event) {
+    var target = event.target;
+    var targetClose = target.closest('a')
+    console.log(targetClose)
+    console.log(dialogClose)
+    if (targetClose === dialogClose) {
+      console.log('крестик закрытия йоу')
+      dialog.classList.add('hidden');
+      isActive.classList.remove('pin--active')
+    }
+  });
 })();
