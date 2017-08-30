@@ -20,7 +20,6 @@
   var dialog = document.querySelector('#offer-dialog');
   var dialogClose = dialog.querySelector('.dialog__close');
   var pinMarkerArr = [];
-  var pinMarkerElementsList = [];
   var isActive;
 
   var getRandomArrayPos = function (array) {
@@ -158,15 +157,6 @@
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
   };
 
-  var getPinMarkerElementsList = function () {
-    var pinMarkerElementsNodeList = pinMap.querySelectorAll('.pin');
-    pinMarkerElementsList = Array.prototype.slice.call(pinMarkerElementsNodeList);
-  };
-
-  setPinMarker();
-  renderLodgeView();
-  getPinMarkerElementsList();
-
   var setActive = function(item) {
     dialog.classList.remove('hidden');
 
@@ -182,7 +172,7 @@
     var i = 0;
 
     while (item = item.previousSibling) {
-        item.nodeType == 1 && i++;
+        item.nodeType === 1 && i++;
     }
 
     return i;
@@ -211,4 +201,7 @@
       }
     }
   });
+
+  setPinMarker();
+  renderLodgeView();
 })();
