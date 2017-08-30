@@ -157,7 +157,7 @@
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
   };
 
-  var setActive = function(item) {
+  var setActive = function (item) {
     dialog.classList.remove('hidden');
 
     if (isActive) {
@@ -172,7 +172,7 @@
     var i = 0;
 
     while (item = item.previousSibling) {
-        item.nodeType === 1 && i++;
+      item.nodeType === 1 && i++;
     }
 
     return i;
@@ -182,7 +182,9 @@
     var target = event.target;
     var targetPin = target.closest('div');
 
-    if (!targetPin) return;
+    if (!targetPin) {
+      return;
+    }
 
     renderLodgeView(getPinNumber(targetPin));
     setActive(targetPin);
@@ -190,7 +192,7 @@
 
   dialog.addEventListener('click', function (event) {
     var target = event.target;
-    var targetClose = target.closest('a')
+    var targetClose = target.closest('a');
 
     if (targetClose === dialogClose) {
       event.preventDefault();
