@@ -1,15 +1,21 @@
 'use strict';
 
 (function () {
+  var PIN_LOCATION_X_CORRECTION = 28;
+  var PIN_LOCATION_Y_CORRECTION = 75;
+
+  var keyCode = {
+    ESC: 27,
+    ENTER: 13
+  };
+
   var authorAvatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
   var offerTitles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var offerTypes = ['flat', 'house', 'bungalo'];
   var offerTimes = ['12:00', '13:00', '14:00'];
   var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
+  var pinMarkerArr = [];
   var PINS_COUNT = authorAvatars.length;
-  var PIN_LOCATION_X_CORRECTION = 28;
-  var PIN_LOCATION_Y_CORRECTION = 75;
 
   var pinTemplate = document.querySelector('#pin-template').content;
   var lodgeTemplate = document.querySelector('#lodge-template').content;
@@ -19,7 +25,6 @@
   var fragment = document.createDocumentFragment();
   var dialog = document.querySelector('#offer-dialog');
   var dialogClose = dialog.querySelector('.dialog__close');
-  var pinMarkerArr = [];
   var isActive;
 
   var getRandomArrayPos = function (array) {
@@ -111,6 +116,7 @@
     pinMarkerItem.style.left = pinMarkerLocationX + 'px';
     pinMarkerItem.style.top = pinMarkerLocationY + 'px';
     pinMarker.querySelector('img.rounded').src = pin.author.avatar;
+    pinMarkerItem.setAttribute('tabindex', '5');
 
     return pinMarker;
   };
@@ -155,6 +161,8 @@
     lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
     lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
+
+    document.addEventListener('keydown', onEscKeydown);
   };
 
   var setActive = function (item) {
@@ -178,7 +186,7 @@
     return i;
   };
 
-  pinMap.addEventListener('click', function (event) {
+  var openLodge = function (event) {
     var target = event.target;
     var targetPin = target.closest('div');
 
@@ -188,6 +196,34 @@
 
     renderLodgeView(getPinNumber(targetPin));
     setActive(targetPin);
+
+    document.addEventListener('keydown', onEscKeydown);
+  };
+
+  var closeLodge = function (event) {
+    dialog.classList.add('hidden');
+
+    if (isActive) {
+      isActive.classList.remove('pin--active');
+    }
+
+    document.removeEventListener('keydown', onEscKeydown)
+  };
+
+  var onEscKeydown = function (event ) {
+    if (event.keyCode === keyCode.ESC) {
+      closeLodge()
+    }
+  };
+
+  pinMap.addEventListener('click', function (event) {
+    openLodge(event);
+  });
+
+  pinMap.addEventListener('keydown', function(event) {
+    if (event.keyCode === keyCode.ENTER) {
+      openLodge(event);
+    }
   });
 
   dialog.addEventListener('click', function (event) {
@@ -196,11 +232,13 @@
 
     if (targetClose === dialogClose) {
       event.preventDefault();
-      dialog.classList.add('hidden');
+      closeLodge(event);
+    }
+  });
 
-      if (isActive) {
-        isActive.classList.remove('pin--active');
-      }
+  dialogClose.addEventListener('keydown', function (event) {
+    if (event.keyCode === keyCode.ENTER) {
+      closeLodge(event);
     }
   });
 
