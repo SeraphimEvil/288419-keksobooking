@@ -106,7 +106,7 @@
     }).join('');
   };
 
-  var renderPinMarker = function (pin) {
+  var renderPinMarker = function (pin, pinNumber) {
     var pinMarker = pinTemplate.cloneNode(true);
     var pinMarkerLocationX = pin.location.x + PIN_LOCATION_X_CORRECTION;
     var pinMarkerLocationY = pin.location.y - PIN_LOCATION_Y_CORRECTION;
@@ -116,6 +116,7 @@
     pinMarkerItem.style.top = pinMarkerLocationY + 'px';
     pinMarker.querySelector('img.rounded').src = pin.author.avatar;
     pinMarkerItem.setAttribute('tabindex', '0');
+    pinMarkerItem.setAttribute('data-number', pinNumber);
 
     return pinMarker;
   };
@@ -145,11 +146,13 @@
 
   var setPinMarker = function () {
     var fragment = document.createDocumentFragment();
+    var pinNumber = 0;
 
     for (var i = 0; i < PINS_COUNT; i++) {
       var currentPinMarker = createRandomPin();
 
-      fragment.appendChild(renderPinMarker(currentPinMarker));
+      fragment.appendChild(renderPinMarker(currentPinMarker, pinNumber));
+      pinNumber++;
       pinMarkerArr.push(currentPinMarker);
     }
 
@@ -157,7 +160,7 @@
   };
 
   var renderLodgeView = function (num) {
-    var lodgePanelItem = pinMarkerArr[num - 1];
+    var lodgePanelItem = pinMarkerArr[num];
 
     lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
     lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
@@ -178,13 +181,7 @@
   };
 
   var getPinNumber = function (item) {
-    var i = 0;
-
-    while (item = item.previousSibling) {
-      item.nodeType === 1 && i++;
-    }
-
-    return i;
+    return item.getAttribute('data-number');
   };
 
   var openLodge = function (event) {
@@ -203,16 +200,16 @@
     document.addEventListener('keydown', onEscKeydown);
   };
 
-  var closeLodge = function (event) {
+  var closeLodge = function () {
     dialogElement.classList.add('hidden');
 
     document.removeEventListener('keydown', onEscKeydown);
     removeActivePin();
   };
 
-  var onEscKeydown = function (event ) {
+  var onEscKeydown = function (event) {
     if (event.keyCode === keyCode.ESC) {
-      closeLodge()
+      closeLodge();
     }
   };
 
@@ -220,7 +217,7 @@
     openLodge(event);
   });
 
-  pinMap.addEventListener('keydown', function(event) {
+  pinMap.addEventListener('keydown', function (event) {
     if (event.keyCode === keyCode.ENTER) {
       openLodge(event);
     }
@@ -239,5 +236,5 @@
   });
 
   setPinMarker();
-  renderLodgeView(1);
+  renderLodgeView(0);
 })();
