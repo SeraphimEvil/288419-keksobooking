@@ -21,10 +21,9 @@
   var lodgeTemplate = document.querySelector('#lodge-template').content;
   var pinMap = document.querySelector('.tokyo__pin-map');
   var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
-  var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
   var dialogElement = document.querySelector('#offer-dialog');
   var dialogElementClose = dialogElement.querySelector('.dialog__close');
-  var activePin;
+  var activePinElement;
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -160,23 +159,24 @@
   };
 
   var renderLodgeView = function (num) {
+    var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
     var lodgePanelItem = pinMarkerArr[num];
 
     lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
-    lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
+    lodgePanelElement = lodgePanelElement;
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
 
     document.addEventListener('keydown', onEscKeydown);
   };
 
   var setActivePin = function (item) {
-    activePin = item;
-    activePin.classList.add('pin--active');
+    activePinElement = item;
+    activePinElement.classList.add('pin--active');
   };
 
   var removeActivePin = function () {
-    if (activePin) {
-      activePin.classList.remove('pin--active');
+    if (activePinElement) {
+      activePinElement.classList.remove('pin--active');
     }
   };
 
@@ -186,15 +186,13 @@
 
   var openLodge = function (event) {
     var target = event.target;
-    var targetPin = target.closest('div');
-
-    if (!targetPin) {
-      return;
+    if (!target.classList.contains('pin') && target.parentNode.classList.contains('pin')) {
+      target = target.parentNode;
     }
 
-    renderLodgeView(getPinNumber(targetPin));
+    renderLodgeView(getPinNumber(target));
     removeActivePin();
-    setActivePin(targetPin);
+    setActivePin(target);
     dialogElement.classList.remove('hidden');
 
     document.addEventListener('keydown', onEscKeydown);
@@ -202,9 +200,8 @@
 
   var closeLodge = function () {
     dialogElement.classList.add('hidden');
-
-    document.removeEventListener('keydown', onEscKeydown);
     removeActivePin();
+    document.removeEventListener('keydown', onEscKeydown);
   };
 
   var onEscKeydown = function (event) {
@@ -212,6 +209,9 @@
       closeLodge();
     }
   };
+
+  setPinMarker();
+  renderLodgeView(0);
 
   pinMap.addEventListener('click', function (event) {
     openLodge(event);
@@ -234,7 +234,4 @@
       closeLodge(event);
     }
   });
-
-  setPinMarker();
-  renderLodgeView(0);
 })();
