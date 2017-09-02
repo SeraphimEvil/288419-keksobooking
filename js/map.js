@@ -20,7 +20,6 @@
   var pinTemplate = document.querySelector('#pin-template').content;
   var lodgeTemplate = document.querySelector('#lodge-template').content;
   var pinMap = document.querySelector('.tokyo__pin-map');
-  var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
   var dialogElement = document.querySelector('#offer-dialog');
   var dialogElementClose = dialogElement.querySelector('.dialog__close');
   var activePinElement;
@@ -160,6 +159,7 @@
 
   var renderLodgeView = function (num) {
     var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
+    var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
     var lodgePanelItem = pinMarkerArr[num];
 
     lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
@@ -186,6 +186,7 @@
 
   var openLodge = function (event) {
     var target = event.target;
+
     if (!target.classList.contains('pin') && target.parentNode.classList.contains('pin')) {
       target = target.parentNode;
     }
