@@ -200,8 +200,10 @@
   };
 
   var closeLodge = function () {
+    event.preventDefault();
     dialogElement.classList.add('hidden');
     removeActivePin();
+
     document.removeEventListener('keydown', onEscKeydown);
   };
 
@@ -214,9 +216,7 @@
   setPinMarker();
   renderLodgeView(0);
 
-  pinMap.addEventListener('click', function (event) {
-    openLodge(event);
-  });
+  pinMap.addEventListener('click', openLodge);
 
   pinMap.addEventListener('keydown', function (event) {
     if (event.keyCode === keyCode.ENTER) {
@@ -224,13 +224,9 @@
     }
   });
 
-  dialogElementClose.addEventListener('click', function (event) {
-    event.preventDefault();
-    closeLodge(event);
-  });
+  dialogElementClose.addEventListener('click', closeLodge);
 
   dialogElementClose.addEventListener('keydown', function (event) {
-    event.preventDefault();
     if (event.keyCode === keyCode.ENTER) {
       closeLodge(event);
     }
