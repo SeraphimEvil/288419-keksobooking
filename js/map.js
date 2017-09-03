@@ -23,7 +23,6 @@
   var lodgeTemplateElement = document.querySelector('#lodge-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
   var dialogElement = document.querySelector('#offer-dialog');
-  var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
   var activePinElement;
 
@@ -107,7 +106,7 @@
     }).join('');
   };
 
-  var renderPinMarker = function (pin, pinNumber) {
+  var createPinMarker = function (pin, pinNumber) {
     var pinMarker = pinTemplateElement.cloneNode(true);
     var pinMarkerLocationX = pin.location.x + pinLocationCorrection.X;
     var pinMarkerLocationY = pin.location.y - pinLocationCorrection.Y;
@@ -145,13 +144,13 @@
     return lodgeElement;
   };
 
-  var createPinMarker = function () {
+  var renderPinMarker = function () {
     var fragmentElement = document.createDocumentFragment();
 
     for (var i = 0; i < PINS_COUNT; i++) {
       var currentPinMarker = createRandomPin();
 
-      fragmentElement.appendChild(renderPinMarker(currentPinMarker, i));
+      fragmentElement.appendChild(createPinMarker(currentPinMarker, i));
       pinMarkerArr.push(currentPinMarker);
     }
 
@@ -159,10 +158,11 @@
   };
 
   var renderLodgeView = function (num) {
+    var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
     var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
     var lodgePanelItem = pinMarkerArr[num];
 
-    lodgePanelElement = lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
+    lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
   };
 
@@ -183,7 +183,7 @@
   };
 
   var getPinNumber = function (item) {
-    return item.getAttribute('data-number');
+    return parseInt(item.getAttribute('data-number'), 10);
   };
 
   var pinMarkerClickHandler = function (event) {
@@ -222,7 +222,8 @@
     }
   };
 
-  createPinMarker();
+  dialogElement.classList.add('hidden');
+  renderPinMarker();
 
   document.addEventListener('keydown', escKeydownHandler);
   pinMapElement.addEventListener('click', pinMarkerClickHandler);
