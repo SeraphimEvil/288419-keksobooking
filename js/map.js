@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
-  var PIN_LOCATION_X_CORRECTION = 28;
-  var PIN_LOCATION_Y_CORRECTION = 75;
+  var pinLocationCorrection = {
+    X: 28,
+    Y: 75
+  };
 
   var keyCode = {
     ESC: 27,
@@ -17,11 +19,11 @@
   var pinMarkerArr = [];
   var PINS_COUNT = authorAvatars.length;
 
-  var pinTemplate = document.querySelector('#pin-template').content;
-  var lodgeTemplate = document.querySelector('#lodge-template').content;
-  var pinMap = document.querySelector('.tokyo__pin-map');
+  var pinTemplateElement = document.querySelector('#pin-template').content;
+  var lodgeTemplateElement = document.querySelector('#lodge-template').content;
+  var pinMapElement = document.querySelector('.tokyo__pin-map');
   var dialogElement = document.querySelector('#offer-dialog');
-  var dialogElementClose = dialogElement.querySelector('.dialog__close');
+  var dialogCloseElement = dialogElement.querySelector('.dialog__close');
   var activePinElement;
 
   var getRandomArrayPos = function (array) {
@@ -105,22 +107,22 @@
   };
 
   var renderPinMarker = function (pin, pinNumber) {
-    var pinMarker = pinTemplate.cloneNode(true);
-    var pinMarkerLocationX = pin.location.x + PIN_LOCATION_X_CORRECTION;
-    var pinMarkerLocationY = pin.location.y - PIN_LOCATION_Y_CORRECTION;
+    var pinMarker = pinTemplateElement.cloneNode(true);
+    var pinMarkerLocationX = pin.location.x + pinLocationCorrection.X;
+    var pinMarkerLocationY = pin.location.y - pinLocationCorrection.Y;
     var pinMarkerItem = pinMarker.querySelector('.pin');
 
     pinMarkerItem.style.left = pinMarkerLocationX + 'px';
     pinMarkerItem.style.top = pinMarkerLocationY + 'px';
     pinMarker.querySelector('img.rounded').src = pin.author.avatar;
-    pinMarkerItem.setAttribute('tabindex', '0');
-    pinMarkerItem.setAttribute('data-number', pinNumber);
+    pinMarkerItem.tabIndex = 0;
+    pinMarkerItem.dataset.number = pinNumber;
 
     return pinMarker;
   };
 
   var renderLodge = function (pin) {
-    var lodgeElement = lodgeTemplate.cloneNode(true);
+    var lodgeElement = lodgeTemplateElement.cloneNode(true);
     var lodgeTitle = pin.offer.title;
     var lodgeAddress = pin.offer.address;
     var lodgePrice = pin.offer.price + '  &#x20bd;/ночь';
@@ -142,41 +144,41 @@
     return lodgeElement;
   };
 
-  var setPinMarker = function () {
-    var fragment = document.createDocumentFragment();
-    var pinNumber = 0;
+  var createPinMarker = function () {
+    var fragmentElement = document.createDocumentFragment();
 
     for (var i = 0; i < PINS_COUNT; i++) {
       var currentPinMarker = createRandomPin();
 
-      fragment.appendChild(renderPinMarker(currentPinMarker, pinNumber));
-      pinNumber++;
+      fragmentElement.appendChild(renderPinMarker(currentPinMarker, i));
       pinMarkerArr.push(currentPinMarker);
     }
 
-    pinMap.appendChild(fragment);
+    pinMapElement.appendChild(fragmentElement);
   };
 
   var renderLodgeView = function (num) {
-    var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
-    var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
+    var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
+    var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
     var lodgePanelItem = pinMarkerArr[num];
 
-    lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
-    lodgePanelElement = lodgePanelElement;
+    lodgePanelElement = lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
-
-    document.addEventListener('keydown', onEscKeydown);
   };
 
   var setActivePin = function (item) {
+    removeActivePin(item);
     activePinElement = item;
     activePinElement.classList.add('pin--active');
   };
 
-  var removeActivePin = function () {
+  var removeActivePin = function (item) {
     if (activePinElement) {
-      activePinElement.classList.remove('pin--active');
+      if (item === activePinElement) {
+        return false;
+      } else {
+        activePinElement.classList.remove('pin--active');
+      }
     }
   };
 
@@ -184,7 +186,7 @@
     return item.getAttribute('data-number');
   };
 
-  var openLodge = function (event) {
+  var pinMarkerClickHandler = function (event) {
     var target = event.target;
 
     if (!target.classList.contains('pin') && target.parentNode.classList.contains('pin')) {
@@ -192,43 +194,39 @@
     }
 
     renderLodgeView(getPinNumber(target));
-    removeActivePin();
     setActivePin(target);
     dialogElement.classList.remove('hidden');
-
-    document.addEventListener('keydown', onEscKeydown);
   };
 
-  var closeLodge = function () {
+  var closeClickHandler = function (event) {
     event.preventDefault();
     dialogElement.classList.add('hidden');
     removeActivePin();
-
-    document.removeEventListener('keydown', onEscKeydown);
   };
 
-  var onEscKeydown = function (event) {
+  var escKeydownHandler = function (event) {
     if (event.keyCode === keyCode.ESC) {
-      closeLodge();
+      closeClickHandler(event);
     }
   };
 
-  setPinMarker();
-  renderLodgeView(0);
-
-  pinMap.addEventListener('click', openLodge);
-
-  pinMap.addEventListener('keydown', function (event) {
+  var pinMarkerKeydownHandler = function (event) {
     if (event.keyCode === keyCode.ENTER) {
-      openLodge(event);
+      pinMarkerClickHandler(event);
     }
-  });
+  };
 
-  dialogElementClose.addEventListener('click', closeLodge);
-
-  dialogElementClose.addEventListener('keydown', function (event) {
+  var closeKeydownHandler = function (event) {
     if (event.keyCode === keyCode.ENTER) {
-      closeLodge(event);
+      closeClickHandler(event);
     }
-  });
+  }
+
+  createPinMarker();
+
+  document.addEventListener('keydown', escKeydownHandler);
+  pinMapElement.addEventListener('click', pinMarkerClickHandler);
+  pinMapElement.addEventListener('keydown', pinMarkerKeydownHandler);
+  dialogCloseElement.addEventListener('click', closeClickHandler);
+  dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
 })();
