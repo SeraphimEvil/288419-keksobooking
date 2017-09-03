@@ -175,7 +175,7 @@
   var removeActivePin = function (item) {
     if (activePinElement) {
       if (item === activePinElement) {
-        return false;
+        return;
       } else {
         activePinElement.classList.remove('pin--active');
       }
@@ -220,7 +220,7 @@
     if (event.keyCode === keyCode.ENTER) {
       closeClickHandler(event);
     }
-  }
+  };
 
   createPinMarker();
 
