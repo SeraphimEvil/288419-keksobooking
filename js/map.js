@@ -145,7 +145,7 @@
     return lodgeElement;
   };
 
-  var renderPinMarker = function () {
+  var renderPinMarkers = function () {
     var fragmentElement = document.createDocumentFragment();
 
     for (var i = 0; i < PINS_COUNT; i++) {
@@ -162,8 +162,7 @@
     var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
     var lodgePanelItem = pinMarkerArr[num];
 
-    dialogElement.removeChild(lodgePanelElement);
-    dialogElement.appendChild(renderLodge(lodgePanelItem));
+    dialogElement.replaceChild(renderLodge(lodgePanelItem), lodgePanelElement);
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
   };
 
@@ -173,13 +172,9 @@
     activePinElement.classList.add('pin--active');
   };
 
-  var removeActivePin = function (item) {
+  var removeActivePin = function () {
     if (activePinElement) {
-      if (item === activePinElement) {
-        return;
-      } else {
-        activePinElement.classList.remove('pin--active');
-      }
+      activePinElement.classList.remove('pin--active');
     }
   };
 
@@ -187,44 +182,56 @@
     return parseInt(item.getAttribute('data-number'), 10);
   };
 
-  var pinMarkerClickHandler = function (event) {
+  var openDialog = function () {
     var target = event.target;
 
     if (!target.classList.contains('pin') && target.parentNode.classList.contains('pin')) {
       target = target.parentNode;
     }
 
-    renderLodgeView(getPinNumber(target));
+    if (target === activePinElement) {
+      return;
+    }
+
     setActivePin(target);
+    renderLodgeView(getPinNumber(target));
     dialogElement.classList.remove('hidden');
   };
 
-  var closeClickHandler = function (event) {
-    event.preventDefault();
-    dialogElement.classList.add('hidden');
-    removeActivePin();
-  };
-
-  var escKeydownHandler = function (event) {
-    if (event.keyCode === keyCode.ESC) {
-      closeClickHandler(event);
-    }
+  var pinMarkerClickHandler = function (event) {
+    openDialog(event);
   };
 
   var pinMarkerKeydownHandler = function (event) {
     if (event.keyCode === keyCode.ENTER) {
-      pinMarkerClickHandler(event);
+      openDialog(event);
     }
+  };
+
+  var closeDialog = function () {
+    dialogElement.classList.add('hidden');
+    removeActivePin();
+  };
+
+  var closeClickHandler = function (event) {
+    event.preventDefault();
+    closeDialog();
   };
 
   var closeKeydownHandler = function (event) {
     if (event.keyCode === keyCode.ENTER) {
-      closeClickHandler(event);
+      closeDialog();
     }
   };
 
-  dialogElement.classList.add('hidden');
-  renderPinMarker();
+  var escKeydownHandler = function (event) {
+    if (event.keyCode === keyCode.ESC) {
+      closeDialog();
+    }
+  };
+
+  closeDialog();
+  renderPinMarkers();
 
   document.addEventListener('keydown', escKeydownHandler);
   pinMapElement.addEventListener('click', pinMarkerClickHandler);
