@@ -22,6 +22,7 @@
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var lodgeTemplateElement = document.querySelector('#lodge-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
+  var pinMapMainElement = pinMapElement.querySelector('.pin.pin__main');
   var dialogElement = document.querySelector('#offer-dialog');
   var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
@@ -189,7 +190,7 @@
       target = target.parentNode;
     }
 
-    if (target === activePinElement) {
+    if (target === activePinElement || target === pinMapMainElement) {
       return;
     }
 
