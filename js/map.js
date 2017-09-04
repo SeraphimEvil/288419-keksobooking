@@ -17,7 +17,7 @@
   var offerTimes = ['12:00', '13:00', '14:00'];
   var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var pinMarkerArr = [];
-  var PINS_COUNT = authorAvatars.length;
+  var pinsCount = authorAvatars.length;
 
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var lodgeTemplateElement = document.querySelector('#lodge-template').content;
@@ -149,7 +149,7 @@
   var renderPinMarkers = function () {
     var fragmentElement = document.createDocumentFragment();
 
-    for (var i = 0; i < PINS_COUNT; i++) {
+    for (var i = 0; i < pinsCount; i++) {
       var currentPinMarker = createRandomPin();
 
       fragmentElement.appendChild(createPinMarker(currentPinMarker, i));
