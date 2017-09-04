@@ -162,7 +162,8 @@
     var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
     var lodgePanelItem = pinMarkerArr[num];
 
-    lodgePanelElement.replaceWith(renderLodge(lodgePanelItem));
+    dialogElement.removeChild(lodgePanelElement);
+    dialogElement.appendChild(renderLodge(lodgePanelItem));
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
   };
 
