@@ -1,23 +1,32 @@
 'use strict';
 
 (function () {
+  var pinLocationCorrection = {
+    X: 28,
+    Y: 75
+  };
+
+  var keyCode = {
+    ESC: 27,
+    ENTER: 13
+  };
+
   var authorAvatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
   var offerTitles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var offerTypes = ['flat', 'house', 'bungalo'];
   var offerTimes = ['12:00', '13:00', '14:00'];
   var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
-  var PINS_COUNT = authorAvatars.length;
-  var PIN_LOCATION_X_CORRECTION = 28;
-  var PIN_LOCATION_Y_CORRECTION = 75;
-
-  var pinTemplate = document.querySelector('#pin-template').content;
-  var lodgeTemplate = document.querySelector('#lodge-template').content;
-  var pinMap = document.querySelector('.tokyo__pin-map');
-  var lodgePanelAvatar = document.querySelector('#offer-dialog .dialog__title img');
-  var lodgePanelElement = document.querySelector('#offer-dialog .dialog__panel');
-  var fragment = document.createDocumentFragment();
   var pinMarkerArr = [];
+  var PINS_COUNT = authorAvatars.length;
+
+  var pinTemplateElement = document.querySelector('#pin-template').content;
+  var lodgeTemplateElement = document.querySelector('#lodge-template').content;
+  var pinMapElement = document.querySelector('.tokyo__pin-map');
+  var pinMapMainElement = pinMapElement.querySelector('.pin.pin__main');
+  var dialogElement = document.querySelector('#offer-dialog');
+  var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
+  var dialogCloseElement = dialogElement.querySelector('.dialog__close');
+  var activePinElement;
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -99,21 +108,23 @@
     }).join('');
   };
 
-  var renderPinMarker = function (pin) {
-    var pinMarker = pinTemplate.cloneNode(true);
-    var pinMarkerLocationX = pin.location.x + PIN_LOCATION_X_CORRECTION;
-    var pinMarkerLocationY = pin.location.y - PIN_LOCATION_Y_CORRECTION;
+  var createPinMarker = function (pin, pinNumber) {
+    var pinMarker = pinTemplateElement.cloneNode(true);
+    var pinMarkerLocationX = pin.location.x + pinLocationCorrection.X;
+    var pinMarkerLocationY = pin.location.y - pinLocationCorrection.Y;
     var pinMarkerItem = pinMarker.querySelector('.pin');
 
     pinMarkerItem.style.left = pinMarkerLocationX + 'px';
     pinMarkerItem.style.top = pinMarkerLocationY + 'px';
     pinMarker.querySelector('img.rounded').src = pin.author.avatar;
+    pinMarkerItem.tabIndex = 0;
+    pinMarkerItem.dataset.number = pinNumber;
 
     return pinMarker;
   };
 
   var renderLodge = function (pin) {
-    var lodgeElement = lodgeTemplate.cloneNode(true);
+    var lodgeElement = lodgeTemplateElement.cloneNode(true);
     var lodgeTitle = pin.offer.title;
     var lodgeAddress = pin.offer.address;
     var lodgePrice = pin.offer.price + '  &#x20bd;/ночь';
@@ -135,14 +146,97 @@
     return lodgeElement;
   };
 
-  for (var i = 0; i < PINS_COUNT; i++) {
-    var currentPinMarker = createRandomPin();
+  var renderPinMarkers = function () {
+    var fragmentElement = document.createDocumentFragment();
 
-    fragment.appendChild(renderPinMarker(currentPinMarker));
-    lodgePanelAvatar.src = currentPinMarker.author.avatar;
-    pinMarkerArr.push(currentPinMarker);
-  }
+    for (var i = 0; i < PINS_COUNT; i++) {
+      var currentPinMarker = createRandomPin();
 
-  pinMap.appendChild(fragment);
-  lodgePanelElement.replaceWith(renderLodge(pinMarkerArr[0]));
+      fragmentElement.appendChild(createPinMarker(currentPinMarker, i));
+      pinMarkerArr.push(currentPinMarker);
+    }
+
+    pinMapElement.appendChild(fragmentElement);
+  };
+
+  var renderLodgeView = function (num) {
+    var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
+    var lodgePanelItem = pinMarkerArr[num];
+
+    dialogElement.replaceChild(renderLodge(lodgePanelItem), lodgePanelElement);
+    lodgePanelAvatar.src = lodgePanelItem.author.avatar;
+  };
+
+  var setActivePin = function (item) {
+    removeActivePin(item);
+    activePinElement = item;
+    activePinElement.classList.add('pin--active');
+  };
+
+  var removeActivePin = function () {
+    if (activePinElement) {
+      activePinElement.classList.remove('pin--active');
+    }
+  };
+
+  var getPinNumber = function (item) {
+    return parseInt(item.getAttribute('data-number'), 10);
+  };
+
+  var openDialog = function () {
+    var target = event.target;
+
+    if (!target.classList.contains('pin') && target.parentNode.classList.contains('pin')) {
+      target = target.parentNode;
+    }
+
+    if (target === activePinElement || target === pinMapMainElement) {
+      return;
+    }
+
+    setActivePin(target);
+    renderLodgeView(getPinNumber(target));
+    dialogElement.classList.remove('hidden');
+  };
+
+  var pinMapClickHandler = function (event) {
+    openDialog(event);
+  };
+
+  var pinMapKeydownHandler = function (event) {
+    if (event.keyCode === keyCode.ENTER) {
+      openDialog(event);
+    }
+  };
+
+  var closeDialog = function () {
+    dialogElement.classList.add('hidden');
+    removeActivePin();
+  };
+
+  var closeClickHandler = function (event) {
+    event.preventDefault();
+    closeDialog();
+  };
+
+  var closeKeydownHandler = function (event) {
+    if (event.keyCode === keyCode.ENTER) {
+      closeDialog();
+    }
+  };
+
+  var escKeydownHandler = function (event) {
+    if (event.keyCode === keyCode.ESC) {
+      closeDialog();
+    }
+  };
+
+  closeDialog();
+  renderPinMarkers();
+
+  document.addEventListener('keydown', escKeydownHandler);
+  pinMapElement.addEventListener('click', pinMapClickHandler);
+  pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
+  dialogCloseElement.addEventListener('click', closeClickHandler);
+  dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
 })();
