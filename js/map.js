@@ -312,6 +312,8 @@
   };
 
   var formOfferElementSubmitHandler = function () {
+    checkHousingType();
+    checkRoomNumber();
     formOfferElement.submit();
     setTimeout(function () {
       formOfferElement.reset();
