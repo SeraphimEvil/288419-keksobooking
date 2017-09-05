@@ -199,11 +199,11 @@
     dialogElement.classList.remove('hidden');
   };
 
-  var pinMarkerClickHandler = function (event) {
+  var pinMapClickHandler = function (event) {
     openDialog(event);
   };
 
-  var pinMarkerKeydownHandler = function (event) {
+  var pinMapKeydownHandler = function (event) {
     if (event.keyCode === keyCode.ENTER) {
       openDialog(event);
     }
@@ -235,8 +235,8 @@
   renderPinMarkers();
 
   document.addEventListener('keydown', escKeydownHandler);
-  pinMapElement.addEventListener('click', pinMarkerClickHandler);
-  pinMapElement.addEventListener('keydown', pinMarkerKeydownHandler);
+  pinMapElement.addEventListener('click', pinMapClickHandler);
+  pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
   dialogCloseElement.addEventListener('click', closeClickHandler);
   dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
 })();
