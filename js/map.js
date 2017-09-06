@@ -325,7 +325,7 @@
     inputField.setCustomValidity(customValidityMessage);
   };
 
-  var formOfferElementSubmitHandler = function () {
+  var formOfferElementSubmitHandler = function (event) {
     event.preventDefault();
     var isValid = false;
 
