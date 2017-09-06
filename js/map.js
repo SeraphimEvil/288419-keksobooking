@@ -121,6 +121,9 @@
 
       case housingType.BUNGALO:
         offerType = 'Бунгало';
+        break;
+      default:
+        offerType = 'Не определено';
     }
 
     return offerType;
@@ -272,6 +275,9 @@
         break;
       case housingType.PALACE:
         priceCountElement.min = 10000;
+        break;
+      default:
+        priceCountElement.min = 0;
     }
   };
 
@@ -280,19 +286,25 @@
   };
 
   var checkRoomNumber = function () {
+    var roomsValue;
     switch (roomNumberElement.value) {
       case roomsCount.ONE:
-        capacityCountElement.value = 1;
+        roomsValue = 1;
         break;
       case roomsCount.TWO:
-        capacityCountElement.value = getRandomNumber(1, 2);
+        roomsValue = getRandomNumber(1, 2);
         break;
       case roomsCount.THREE:
-        capacityCountElement.value = getRandomNumber(1, 3);
+        roomsValue = getRandomNumber(1, 3);
         break;
       case roomsCount.ALL:
-        capacityCountElement.value = 0;
+        roomsValue = 0;
+        break;
+      default:
+        roomsValue = 1;
     }
+
+    capacityCountElement.value = roomsValue;
   };
 
   var roomNumberElementChangeHandler = function () {
@@ -301,23 +313,33 @@
 
   var offerTitleElementInputHandler = function (event) {
     var inputField = event.target;
+    var inputLength = inputField.value.length;
+    var customValidityMessage = '';
 
-    if (inputField.value.length < 30) {
-      inputField.setCustomValidity('Минимальное допустимое количество символов: 30');
-    } else if (inputField.value.length > 100) {
-      inputField.setCustomValidity('Максимальное допустимое количество символов: 100');
-    } else {
-      inputField.setCustomValidity('');
+    if (inputLength < 30) {
+      customValidityMessage = 'Минимальное допустимое количество символов: 30';
+    } else if (inputLength > 100) {
+      customValidityMessage = 'Максимальное допустимое количество символов: 100';
     }
+
+    inputField.setCustomValidity(customValidityMessage);
   };
 
   var formOfferElementSubmitHandler = function () {
+    event.preventDefault();
+    var isValid = false;
+
     checkHousingType();
     checkRoomNumber();
-    formOfferElement.submit();
-    setTimeout(function () {
+
+    if (priceCountElement.validity.valid && capacityCountElement.validity.valid) {
+      isValid = true;
+    }
+
+    if (isValid) {
+      formOfferElement.submit();
       formOfferElement.reset();
-    }, 100);
+    }
   };
 
   closeDialog();
