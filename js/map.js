@@ -1,6 +1,34 @@
 'use strict';
 
 (function () {
+  var housingType = {
+    BUNGALO: 'bungalo',
+    FLAT: 'flat',
+    HOUSE: 'house',
+    PALACE: 'palace'
+  };
+
+  var roomsCount = {
+    ONE: '1',
+    TWO: '2',
+    THREE: '3',
+    ALL: '100'
+  };
+
+  var capacityCount = {
+    ZERO: '0',
+    ONE: '1',
+    TWO: '2',
+    THREE: '3'
+  };
+
+  var prices = {
+    ZERO: 0,
+    ONE_THOUSAND: 1000,
+    FIVE_THOUSAND: 5000,
+    TEN_THOUSAND: 10000
+  };
+
   var pinLocationCorrection = {
     X: 28,
     Y: 75
@@ -27,6 +55,14 @@
   var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
   var activePinElement;
+  var checkInElement = document.querySelector('#timein');
+  var checkOutElement = document.querySelector('#timeout');
+  var housingTypeElement = document.querySelector('#type');
+  var priceCountElement = document.querySelector('#price');
+  var roomNumberElement = document.querySelector('#room_number');
+  var capacityCountElement = document.querySelector('#capacity');
+  var offerTitleElement = document.querySelector('#title');
+  var formOfferElement = document.querySelector('.notice__form');
 
   var getRandomArrayPos = function (array) {
     return Math.floor(Math.random() * array.length);
@@ -86,20 +122,20 @@
   };
 
   var getPinOfferTypeTranslate = function (offerType) {
+    var offerTypeValue = 'Не определено';
+
     switch (offerType) {
-      case 'flat':
-        offerType = 'Квартира';
+      case housingType.FLAT:
+        offerTypeValue = 'Квартира';
         break;
-
-      case 'house':
-        offerType = 'Дом';
+      case housingType.HOUSE:
+        offerTypeValue = 'Дом';
         break;
-
-      case 'bungalo':
-        offerType = 'Бунгало';
+      case housingType.BUNGALO:
+        offerTypeValue = 'Бунгало';
     }
 
-    return offerType;
+    return offerTypeValue;
   };
 
   var renderPinOfferFeauteres = function (features) {
@@ -231,6 +267,110 @@
     }
   };
 
+  var checkInElementChangeHandler = function () {
+    checkOutElement.value = checkInElement.value;
+  };
+
+  var checkOutElementChangeHandler = function () {
+    checkInElement.value = checkOutElement.value;
+  };
+
+  var checkHousingType = function () {
+    var minPriceValue = prices.ZERO;
+
+    switch (housingTypeElement.value) {
+      case housingType.FLAT:
+        minPriceValue = prices.ONE_THOUSAND;
+        break;
+      case housingType.HOUSE:
+        minPriceValue = prices.FIVE_THOUSAND;
+        break;
+      case housingType.PALACE:
+        minPriceValue = prices.TEN_THOUSAND;
+    }
+
+    priceCountElement.min = minPriceValue;
+  };
+
+  var housingTypeElementChangeHandler = function () {
+    checkHousingType();
+  };
+
+  var checkRoomNumber = function () {
+    var roomsValue = 1;
+
+    switch (roomNumberElement.value) {
+      case roomsCount.TWO:
+        roomsValue = getRandomNumber(1, 2);
+        break;
+      case roomsCount.THREE:
+        roomsValue = getRandomNumber(1, 3);
+        break;
+      case roomsCount.ALL:
+        roomsValue = 0;
+    }
+
+    capacityCountElement.value = roomsValue;
+  };
+
+  var roomNumberElementChangeHandler = function () {
+    checkRoomNumber();
+  };
+
+  var checkCapacityCount = function () {
+    var capacityValue = 1;
+
+    switch (capacityCountElement.value) {
+      case capacityCount.ONE:
+        capacityValue = getRandomNumber(1, 3);
+        break;
+      case capacityCount.TWO:
+        capacityValue = getRandomNumber(2, 3);
+        break;
+      case capacityCount.THREE:
+        capacityValue = 3;
+        break;
+      case capacityCount.ZERO:
+        capacityValue = 100;
+    }
+
+    roomNumberElement.value = capacityValue;
+  };
+
+  var capacityCountElementChangeHandler = function () {
+    checkCapacityCount();
+  };
+
+  var offerTitleElementInputHandler = function () {
+    var inputLength = offerTitleElement.value.length;
+    var customValidityMessage = '';
+
+    if (inputLength < 30) {
+      customValidityMessage = 'Минимальное допустимое количество символов: 30';
+    } else if (inputLength > 100) {
+      customValidityMessage = 'Максимальное допустимое количество символов: 100';
+    }
+
+    offerTitleElement.setCustomValidity(customValidityMessage);
+  };
+
+  var formOfferElementSubmitHandler = function (event) {
+    var isValid = false;
+
+    checkHousingType();
+    checkRoomNumber();
+
+    isValid = priceCountElement.validity.valid && capacityCountElement.validity.valid;
+
+    if (!isValid) {
+      event.preventDefault();
+    } else {
+      setTimeout(function () {
+        formOfferElement.reset();
+      });
+    }
+  };
+
   closeDialog();
   renderPinMarkers();
 
@@ -239,4 +379,11 @@
   pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
   dialogCloseElement.addEventListener('click', closeClickHandler);
   dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
+  checkInElement.addEventListener('change', checkInElementChangeHandler);
+  checkOutElement.addEventListener('change', checkOutElementChangeHandler);
+  housingTypeElement.addEventListener('change', housingTypeElementChangeHandler);
+  roomNumberElement.addEventListener('change', roomNumberElementChangeHandler);
+  capacityCountElement.addEventListener('change', capacityCountElementChangeHandler);
+  offerTitleElement.addEventListener('input', offerTitleElementInputHandler);
+  formOfferElement.addEventListener('submit', formOfferElementSubmitHandler);
 })();
