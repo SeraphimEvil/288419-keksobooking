@@ -365,7 +365,9 @@
     if (!isValid) {
       event.preventDefault();
     } else {
-      setTimeout(formOfferElement.reset);
+      setTimeout(function () {
+        formOfferElement.reset();
+      });
     }
   };
 
