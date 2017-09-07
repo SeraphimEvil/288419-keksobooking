@@ -353,7 +353,7 @@
     } else {
       setTimeout(function () {
         formOfferElement.reset();
-      }, 100);
+      });
     }
   };
 
