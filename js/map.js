@@ -279,9 +279,6 @@
     var minPriceValue = prices.ZERO;
 
     switch (housingTypeElement.value) {
-      case housingType.BUNGALO:
-        minPriceValue = prices.ZERO;
-        break;
       case housingType.FLAT:
         minPriceValue = prices.ONE_THOUSAND;
         break;
@@ -303,9 +300,6 @@
     var roomsValue = 1;
 
     switch (roomNumberElement.value) {
-      case roomsCount.ONE:
-        roomsValue = 1;
-        break;
       case roomsCount.TWO:
         roomsValue = getRandomNumber(1, 2);
         break;
@@ -371,9 +365,7 @@
     if (!isValid) {
       event.preventDefault();
     } else {
-      setTimeout(function () {
-        formOfferElement.reset();
-      });
+      setTimeout(formOfferElement.reset);
     }
   };
 
