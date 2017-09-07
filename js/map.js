@@ -15,6 +15,13 @@
     ALL: '100'
   };
 
+  var prices = {
+    ZERO: 0,
+    ONE_THOUSAND: 1000,
+    FIVE_THOUSAND: 5000,
+    TEN_THOUSAND: 10000
+  };
+
   var pinLocationCorrection = {
     X: 28,
     Y: 75
@@ -41,7 +48,6 @@
   var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
   var activePinElement;
-
   var checkInElement = document.querySelector('#timein');
   var checkOutElement = document.querySelector('#timeout');
   var housingTypeElement = document.querySelector('#type');
@@ -49,7 +55,6 @@
   var roomNumberElement = document.querySelector('#room_number');
   var capacityCountElement = document.querySelector('#capacity');
   var offerTitleElement = document.querySelector('#title');
-
   var formOfferElement = document.querySelector('.notice__form');
 
   var getRandomArrayPos = function (array) {
@@ -110,21 +115,23 @@
   };
 
   var getPinOfferTypeTranslate = function (offerType) {
+    var offerTypeValue;
+
     switch (offerType) {
       case housingType.FLAT:
-        offerType = 'Квартира';
+        offerTypeValue = 'Квартира';
         break;
-
       case housingType.HOUSE:
-        offerType = 'Дом';
+        offerTypeValue = 'Дом';
         break;
-
       case housingType.BUNGALO:
-        offerType = 'Бунгало';
+        offerTypeValue = 'Бунгало';
         break;
       default:
-        offerType = 'Не определено';
+        offerTypeValue = 'Не определено';
     }
+
+    offerType = offerTypeValue;
 
     return offerType;
   };
@@ -262,23 +269,31 @@
     checkOutElement.value = checkInElement.value;
   };
 
+  var checkOutElementChangeHandler = function () {
+    checkInElement.value = checkOutElement.value;
+  };
+
   var checkHousingType = function () {
+    var minPriceValue;
+
     switch (housingTypeElement.value) {
       case housingType.BUNGALO:
-        priceCountElement.min = 0;
+        minPriceValue = prices.ZERO;
         break;
       case housingType.FLAT:
-        priceCountElement.min = 1000;
+        minPriceValue = prices.ONE_THOUSAND;
         break;
       case housingType.HOUSE:
-        priceCountElement.min = 5000;
+        minPriceValue = prices.FIVE_THOUSAND;
         break;
       case housingType.PALACE:
-        priceCountElement.min = 10000;
+        minPriceValue = prices.TEN_THOUSAND;
         break;
       default:
-        priceCountElement.min = 0;
+        minPriceValue = prices.ZERO;
     }
+
+    priceCountElement.min = minPriceValue;
   };
 
   var housingTypeElementChangeHandler = function () {
@@ -287,6 +302,7 @@
 
   var checkRoomNumber = function () {
     var roomsValue;
+
     switch (roomNumberElement.value) {
       case roomsCount.ONE:
         roomsValue = 1;
@@ -311,9 +327,8 @@
     checkRoomNumber();
   };
 
-  var offerTitleElementInputHandler = function (event) {
-    var inputField = event.target;
-    var inputLength = inputField.value.length;
+  var offerTitleElementInputHandler = function () {
+    var inputLength = offerTitleElement.value.length;
     var customValidityMessage = '';
 
     if (inputLength < 30) {
@@ -322,21 +337,21 @@
       customValidityMessage = 'Максимальное допустимое количество символов: 100';
     }
 
-    inputField.setCustomValidity(customValidityMessage);
+    offerTitleElement.setCustomValidity(customValidityMessage);
   };
 
   var formOfferElementSubmitHandler = function (event) {
-    event.preventDefault();
     var isValid = false;
 
     checkHousingType();
     checkRoomNumber();
 
-    if (priceCountElement.validity.valid && capacityCountElement.validity.valid) {
-      isValid = true;
-    }
+    isValid = priceCountElement.validity.valid && capacityCountElement.validity.valid;
 
-    if (isValid) {
+    if (!isValid) {
+      event.preventDefault();
+    } else {
+      event.preventDefault();
       formOfferElement.submit();
       formOfferElement.reset();
     }
@@ -351,6 +366,7 @@
   dialogCloseElement.addEventListener('click', closeClickHandler);
   dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
   checkInElement.addEventListener('change', checkInElementChangeHandler);
+  checkOutElement.addEventListener('change', checkOutElementChangeHandler);
   housingTypeElement.addEventListener('change', housingTypeElementChangeHandler);
   roomNumberElement.addEventListener('change', roomNumberElementChangeHandler);
   offerTitleElement.addEventListener('input', offerTitleElementInputHandler);
