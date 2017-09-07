@@ -351,9 +351,9 @@
     if (!isValid) {
       event.preventDefault();
     } else {
-      event.preventDefault();
-      formOfferElement.submit();
-      formOfferElement.reset();
+      setTimeout(function () {
+        formOfferElement.reset();
+      }, 100);
     }
   };
 
