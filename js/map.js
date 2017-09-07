@@ -15,6 +15,13 @@
     ALL: '100'
   };
 
+  var capacityCount = {
+    ZERO: '0',
+    ONE: '1',
+    TWO: '2',
+    THREE: '3'
+  };
+
   var prices = {
     ZERO: 0,
     ONE_THOUSAND: 1000,
@@ -115,7 +122,7 @@
   };
 
   var getPinOfferTypeTranslate = function (offerType) {
-    var offerTypeValue;
+    var offerTypeValue = 'Не определено';
 
     switch (offerType) {
       case housingType.FLAT:
@@ -126,14 +133,9 @@
         break;
       case housingType.BUNGALO:
         offerTypeValue = 'Бунгало';
-        break;
-      default:
-        offerTypeValue = 'Не определено';
     }
 
-    offerType = offerTypeValue;
-
-    return offerType;
+    return offerTypeValue;
   };
 
   var renderPinOfferFeauteres = function (features) {
@@ -274,7 +276,7 @@
   };
 
   var checkHousingType = function () {
-    var minPriceValue;
+    var minPriceValue = prices.ZERO;
 
     switch (housingTypeElement.value) {
       case housingType.BUNGALO:
@@ -288,9 +290,6 @@
         break;
       case housingType.PALACE:
         minPriceValue = prices.TEN_THOUSAND;
-        break;
-      default:
-        minPriceValue = prices.ZERO;
     }
 
     priceCountElement.min = minPriceValue;
@@ -301,7 +300,7 @@
   };
 
   var checkRoomNumber = function () {
-    var roomsValue;
+    var roomsValue = 1;
 
     switch (roomNumberElement.value) {
       case roomsCount.ONE:
@@ -315,9 +314,6 @@
         break;
       case roomsCount.ALL:
         roomsValue = 0;
-        break;
-      default:
-        roomsValue = 1;
     }
 
     capacityCountElement.value = roomsValue;
@@ -325,6 +321,30 @@
 
   var roomNumberElementChangeHandler = function () {
     checkRoomNumber();
+  };
+
+  var checkCapacityCount = function () {
+    var capacityValue = 1;
+
+    switch (capacityCountElement.value) {
+      case capacityCount.ONE:
+        capacityValue = getRandomNumber(1, 3);
+        break;
+      case capacityCount.TWO:
+        capacityValue = getRandomNumber(2, 3);
+        break;
+      case capacityCount.THREE:
+        capacityValue = 3;
+        break;
+      case capacityCount.ZERO:
+        capacityValue = 100;
+    }
+
+    roomNumberElement.value = capacityValue;
+  };
+
+  var capacityCountElementChangeHandler = function () {
+    checkCapacityCount();
   };
 
   var offerTitleElementInputHandler = function () {
@@ -369,6 +389,7 @@
   checkOutElement.addEventListener('change', checkOutElementChangeHandler);
   housingTypeElement.addEventListener('change', housingTypeElementChangeHandler);
   roomNumberElement.addEventListener('change', roomNumberElementChangeHandler);
+  capacityCountElement.addEventListener('change', capacityCountElementChangeHandler);
   offerTitleElement.addEventListener('input', offerTitleElementInputHandler);
   formOfferElement.addEventListener('submit', formOfferElementSubmitHandler);
 })();
