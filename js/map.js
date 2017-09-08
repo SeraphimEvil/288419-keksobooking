@@ -1,21 +1,24 @@
 'use strict';
 
 (function () {
+  var cardModule = window.card;
+  var utilModule = window.util;
+
   var closeClickHandler = function (event) {
     event.preventDefault();
-    window.card.closeDialog();
+    cardModule.closeDialog();
   };
 
   var closeKeydownHandler = function (event) {
-    window.util.isEnterEvent(event, window.card.closeDialog);
+    utilModule.isEnterEvent(event, cardModule.closeDialog);
   };
 
   var escKeydownHandler = function (event) {
-    window.util.isEscEvent(event, window.card.closeDialog);
+    utilModule.isEscEvent(event, cardModule.closeDialog);
   };
 
   document.addEventListener('keydown', escKeydownHandler);
 
-  window.card.dialogCloseElement.addEventListener('click', closeClickHandler);
-  window.card.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
+  cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
+  cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
 })();

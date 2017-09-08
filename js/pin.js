@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var dataModule = window.data;
+  var cardModule = window.card;
+  var utilModule = window.util;
+
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
   var pinMapMainElement = pinMapElement.querySelector('.pin.pin__main');
@@ -12,18 +16,18 @@
 
     return {
       author: {
-        avatar: 'img/avatars/user' + getArrayElement(window.data.authorAvatars) + '.png'
+        avatar: 'img/avatars/user' + getArrayElement(dataModule.authorAvatars) + '.png'
       },
       offer: {
-        title: getArrayElement(window.data.offerTitles),
+        title: getArrayElement(dataModule.offerTitles),
         address: locationX + ', ' + locationY,
         price: getRandomNumber(1000, 1000000),
-        type: getRandomArrayElement(window.data.offerTypes),
+        type: getRandomArrayElement(dataModule.offerTypes),
         rooms: getRandomNumber(1, 5),
         guests: getRandomNumber(1, 10),
-        checkin: getRandomArrayElement(window.data.offerTimes),
-        checkout: getRandomArrayElement(window.data.offerTimes),
-        features: getRandomItems(window.data.offerFeauteres),
+        checkin: getRandomArrayElement(dataModule.offerTimes),
+        checkout: getRandomArrayElement(dataModule.offerTimes),
+        features: getRandomItems(dataModule.offerFeauteres),
         description: '',
         photos: []
       },
@@ -66,11 +70,11 @@
   var renderPinMarkers = function () {
     var fragmentElement = document.createDocumentFragment();
 
-    for (var i = 0; i < window.data.PINS_COUNT; i++) {
+    for (var i = 0; i < dataModule.PINS_COUNT; i++) {
       var currentPinMarker = createRandomPin();
 
       fragmentElement.appendChild(createPinMarker(currentPinMarker, i));
-      window.data.pinMarkerArr.push(currentPinMarker);
+      dataModule.pinMarkerArr.push(currentPinMarker);
     }
 
     pinMapElement.appendChild(fragmentElement);
@@ -78,8 +82,8 @@
 
   var createPinMarker = function (pin, pinNumber) {
     var pinMarker = pinTemplateElement.cloneNode(true);
-    var pinMarkerLocationX = pin.location.x + window.data.pinLocationCorrection.X;
-    var pinMarkerLocationY = pin.location.y - window.data.pinLocationCorrection.Y;
+    var pinMarkerLocationX = pin.location.x + dataModule.pinLocationCorrection.X;
+    var pinMarkerLocationY = pin.location.y - dataModule.pinLocationCorrection.Y;
     var pinMarkerItem = pinMarker.querySelector('.pin');
 
     pinMarkerItem.style.left = pinMarkerLocationX + 'px';
@@ -92,11 +96,11 @@
   };
 
   var pinMapClickHandler = function (event) {
-    window.card.openDialog(event);
+    cardModule.openDialog(event);
   };
 
   var pinMapKeydownHandler = function (event) {
-    window.util.isEnterEvent(event, window.card.openDialog);
+    utilModule.isEnterEvent(event, cardModule.openDialog);
   };
 
   var setActivePin = function (item) {

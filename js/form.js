@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var dataModule = window.data;
+
   var checkInElement = document.querySelector('#timein');
   var checkOutElement = document.querySelector('#timeout');
   var housingTypeElement = document.querySelector('#type');
@@ -23,17 +25,17 @@
   };
 
   var checkHousingType = function () {
-    var minPriceValue = window.data.prices.ZERO;
+    var minPriceValue = dataModule.prices.ZERO;
 
     switch (housingTypeElement.value) {
-      case window.data.housingType.FLAT:
-        minPriceValue = window.data.prices.ONE_THOUSAND;
+      case dataModule.housingType.FLAT:
+        minPriceValue = dataModule.prices.ONE_THOUSAND;
         break;
-      case window.data.housingType.HOUSE:
-        minPriceValue = window.data.prices.FIVE_THOUSAND;
+      case dataModule.housingType.HOUSE:
+        minPriceValue = dataModule.prices.FIVE_THOUSAND;
         break;
-      case window.data.housingType.PALACE:
-        minPriceValue = window.data.prices.TEN_THOUSAND;
+      case dataModule.housingType.PALACE:
+        minPriceValue = dataModule.prices.TEN_THOUSAND;
     }
 
     priceCountElement.min = minPriceValue;
@@ -47,13 +49,13 @@
     var roomsValue = 1;
 
     switch (roomNumberElement.value) {
-      case window.data.roomsCount.TWO:
+      case dataModule.roomsCount.TWO:
         roomsValue = getRandomNumber(1, 2);
         break;
-      case window.data.roomsCount.THREE:
+      case dataModule.roomsCount.THREE:
         roomsValue = getRandomNumber(1, 3);
         break;
-      case window.data.roomsCount.ALL:
+      case dataModule.roomsCount.ALL:
         roomsValue = 0;
     }
 
@@ -68,16 +70,16 @@
     var capacityValue = 1;
 
     switch (capacityCountElement.value) {
-      case window.data.capacityCount.ONE:
+      case dataModule.capacityCount.ONE:
         capacityValue = getRandomNumber(1, 3);
         break;
-      case window.data.capacityCount.TWO:
+      case dataModule.capacityCount.TWO:
         capacityValue = getRandomNumber(2, 3);
         break;
-      case window.data.capacityCount.THREE:
+      case dataModule.capacityCount.THREE:
         capacityValue = 3;
         break;
-      case window.data.capacityCount.ZERO:
+      case dataModule.capacityCount.ZERO:
         capacityValue = 100;
     }
 

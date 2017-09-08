@@ -1,14 +1,18 @@
 'use strict';
 
 (function () {
+  var pinModule = window.pin;
+  var dataModule = window.data;
+
   var lodgeTemplateElement = document.querySelector('#lodge-template').content;
   var dialogElement = document.querySelector('#offer-dialog');
   var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
 
+
   var closeDialog = function () {
     dialogElement.classList.add('hidden');
-    window.pin.removeActivePin();
+    pinModule.removeActivePin();
   };
 
   var getPinNumber = function (item) {
@@ -22,18 +26,18 @@
       target = target.parentNode;
     }
 
-    if (target === window.pin.activePinElement || target === window.pin.pinMapMainElement) {
+    if (target === pinModule.activePinElement || target === pinModule.pinMapMainElement) {
       return;
     }
 
-    window.pin.setActivePin(target);
+    pinModule.setActivePin(target);
     renderLodgeView(getPinNumber(target));
     dialogElement.classList.remove('hidden');
   };
 
   var renderLodgeView = function (num) {
     var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
-    var lodgePanelItem = window.data.pinMarkerArr[num];
+    var lodgePanelItem = dataModule.pinMarkerArr[num];
 
     dialogElement.replaceChild(renderLodge(lodgePanelItem), lodgePanelElement);
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
@@ -66,13 +70,13 @@
     var offerTypeValue = 'Не определено';
 
     switch (offerType) {
-      case window.data.housingType.FLAT:
+      case dataModule.housingType.FLAT:
         offerTypeValue = 'Квартира';
         break;
-      case window.data.housingType.HOUSE:
+      case dataModule.housingType.HOUSE:
         offerTypeValue = 'Дом';
         break;
-      case window.data.housingType.BUNGALO:
+      case dataModule.housingType.BUNGALO:
         offerTypeValue = 'Бунгало';
     }
 
