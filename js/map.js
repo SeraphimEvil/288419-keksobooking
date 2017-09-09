@@ -53,9 +53,8 @@
 
       pinModule.pinMapMainElement.style.top = objectPosTop + 'px';
       pinModule.pinMapMainElement.style.left = objectPosLeft + 'px';
-      formModule.formAddressElement.value = 'Координаты: ' +
-        (objectPosTop - dataModule.pinLocationCorrection.mainX) + ' с севера и ' +
-        (objectPosLeft + dataModule.pinLocationCorrection.mainY) + ' c запада';
+      formModule.formAddressElement.value = 'x: ' + (objectPosTop - dataModule.pinLocationCorrection.mainX)
+         + ', y: ' + (objectPosLeft + dataModule.pinLocationCorrection.mainY);
     };
 
     var mouseUpHandler = function (upEvent) {
