@@ -6,10 +6,11 @@
   var pinModule = window.pin;
   var formModule = window.form;
   var dataModule = window.data;
+  var showCardModule = window.showCard;
 
-  var pinMapClickHandler = function (event) {
-    cardModule.openDialog(event);
-  };
+  // var pinMapClickHandler = function (event) {
+  //   cardModule.openDialog(event);
+  // };
 
   var pinMapKeydownHandler = function (event) {
     utilModule.isEnterEvent(event, cardModule.openDialog);
@@ -69,9 +70,11 @@
   };
 
   document.addEventListener('keydown', escKeydownHandler);
-  pinModule.pinMapElement.addEventListener('click', pinMapClickHandler);
+  // pinModule.pinMapElement.addEventListener('click', pinMapClickHandler);
   pinModule.pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
   cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
   cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
   pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousewodnHandler);
+
+  showCardModule(pinModule.pinMapElement, cardModule.openDialog);
 })();
