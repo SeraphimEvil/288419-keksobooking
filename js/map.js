@@ -6,6 +6,13 @@
   var pinModule = window.pin;
   var formModule = window.form;
 
+  var mapElement = document.querySelector('.tokyo');
+  var filtesElement = document.querySelector('.tokyo__filters-container');
+  var mapWidth = mapElement.offsetWidth;
+  var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
+  var pinWidth = pinModule.pinMapMainElement.offsetWidth;
+  var pinHeight = pinModule.pinMapMainElement.offsetHeight;
+
   var pinMapClickHandler = function (event) {
     cardModule.openDialog(event);
   };
@@ -45,12 +52,6 @@
 
       var pinElementTop = pinModule.pinMapMainElement.offsetTop - shift.y;
       var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shift.x;
-      var mapElement = document.querySelector('.tokyo');
-      var filtesElement = document.querySelector('.tokyo__filters-container');
-      var mapWidth = mapElement.offsetWidth;
-      var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
-      var pinWidth = pinModule.pinMapMainElement.offsetWidth;
-      var pinHeight = pinModule.pinMapMainElement.offsetHeight;
 
       startCoords = {
         x: mouseEvent.clientX,
