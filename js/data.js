@@ -3,7 +3,9 @@
 (function () {
   var pinLocationCorrection = {
     X: 28,
-    Y: 75
+    Y: 75,
+    mainX: 37,
+    mainY: 94
   };
 
   var housingType = {

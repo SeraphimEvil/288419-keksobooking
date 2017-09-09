@@ -2,8 +2,6 @@
 
 (function () {
   var dataModule = window.data;
-  var cardModule = window.card;
-  var utilModule = window.util;
 
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
@@ -95,14 +93,6 @@
     return pinMarker;
   };
 
-  var pinMapClickHandler = function (event) {
-    cardModule.openDialog(event);
-  };
-
-  var pinMapKeydownHandler = function (event) {
-    utilModule.isEnterEvent(event, cardModule.openDialog);
-  };
-
   var setActivePin = function (item) {
     removeActivePin(item);
     activePinElement = item;
@@ -117,12 +107,10 @@
 
   renderPinMarkers();
 
-  pinMapElement.addEventListener('click', pinMapClickHandler);
-  pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
-
   window.pin = {
     activePinElement: activePinElement,
     pinMapMainElement: pinMapMainElement,
+    pinMapElement: pinMapElement,
     setActivePin: setActivePin,
     removeActivePin: removeActivePin
   };
