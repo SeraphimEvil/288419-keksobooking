@@ -8,6 +8,11 @@
 
   var mapElement = document.querySelector('.tokyo');
   var filtesElement = document.querySelector('.tokyo__filters-container');
+  var mapWidth = mapElement.offsetWidth;
+  var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
+  var pinWidth = pinModule.pinMapMainElement.offsetWidth;
+  var pinHeight = pinModule.pinMapMainElement.offsetHeight;
+  var startCoords = {};
 
   var pinMapClickHandler = function (event) {
     cardModule.openDialog(event);
@@ -30,78 +35,73 @@
     utilModule.isEscEvent(event, cardModule.closeDialog);
   };
 
-  var pinMapMainElementMousewodnHandler = function (event) {
+  var pinMapMainElementMousedownHandler = function (event) {
     event.preventDefault();
 
-    var startCoords = {
+    startCoords = {
       x: event.clientX,
       y: event.clientY
     };
 
-    var mapWidth = mapElement.offsetWidth;
-    var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
-    var pinWidth = pinModule.pinMapMainElement.offsetWidth;
-    var pinHeight = pinModule.pinMapMainElement.offsetHeight;
-
-    var mouseMoveHandler = function (mouseEvent) {
-      mouseEvent.preventDefault();
-
-      var shift = {
-        x: startCoords.x - mouseEvent.clientX,
-        y: startCoords.y - mouseEvent.clientY
-      };
-
-      var pinElementTop = pinModule.pinMapMainElement.offsetTop - shift.y;
-      var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shift.x;
-
-      startCoords = {
-        x: mouseEvent.clientX,
-        y: mouseEvent.clientY
-      };
-
-      var getMainPinPosY = function () {
-        if (pinElementTop < 0) {
-          pinElementTop = 0;
-          mouseUpHandler(mouseEvent);
-        }
-
-        if (pinElementTop > mapHeight - pinHeight) {
-          pinElementTop = mapHeight - pinHeight;
-          mouseUpHandler(mouseEvent);
-        }
-
-        return pinElementTop;
-      };
-
-      var getMainPinPosX = function () {
-        if (pinElementLeft < 0) {
-          pinElementLeft = 0;
-          mouseUpHandler(mouseEvent);
-        }
-
-        if (pinElementLeft > mapWidth - pinWidth) {
-          pinElementLeft = mapWidth - pinWidth;
-          mouseUpHandler(mouseEvent);
-        }
-
-        return pinElementLeft;
-      };
-
-      pinModule.pinMapMainElement.style.top = getMainPinPosY() + 'px';
-      pinModule.pinMapMainElement.style.left = getMainPinPosX() + 'px';
-      formModule.formAddressElement.value = 'x: ' + (getMainPinPosX() + pinWidth / 2)
-         + ', y: ' + (getMainPinPosY() + pinHeight);
-    };
-
-    var mouseUpHandler = function (upEvent) {
-      upEvent.preventDefault();
-
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
-    };
-
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
+
+    return startCoords;
+  };
+
+  var mouseMoveHandler = function (mouseEvent) {
+    mouseEvent.preventDefault();
+
+    var shift = {
+      x: startCoords.x - mouseEvent.clientX,
+      y: startCoords.y - mouseEvent.clientY
+    };
+
+    startCoords = {
+      x: mouseEvent.clientX,
+      y: mouseEvent.clientY
+    };
+
+    var pinElementTop = pinModule.pinMapMainElement.offsetTop - shift.y;
+    var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shift.x;
+
+    pinModule.pinMapMainElement.style.top = getMainPinPosY(pinElementTop) + 'px';
+    pinModule.pinMapMainElement.style.left = getMainPinPosX(pinElementLeft) + 'px';
+    formModule.formAddressElement.value = 'x: ' + Math.floor(getMainPinPosX(pinElementLeft) + pinWidth / 2)
+       + ', y: ' + Math.floor(getMainPinPosY(pinElementTop) + pinHeight);
+  };
+
+  var getMainPinPosY = function (pinElementTop) {
+    if (pinElementTop < 0) {
+      pinElementTop = 0;
+      mouseUpHandler();
+    }
+
+    if (pinElementTop > mapHeight - pinHeight) {
+      pinElementTop = mapHeight - pinHeight;
+      mouseUpHandler();
+    }
+
+    return pinElementTop;
+  };
+
+  var getMainPinPosX = function (pinElementLeft) {
+    if (pinElementLeft < 0) {
+      pinElementLeft = 0;
+      mouseUpHandler();
+    }
+
+    if (pinElementLeft > mapWidth - pinWidth) {
+      pinElementLeft = mapWidth - pinWidth;
+      mouseUpHandler();
+    }
+
+    return pinElementLeft;
+  };
+
+  var mouseUpHandler = function () {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
   };
 
   document.addEventListener('keydown', escKeydownHandler);
@@ -109,5 +109,5 @@
   pinModule.pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
   cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
   cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
-  pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousewodnHandler);
+  pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousedownHandler);
 })();
