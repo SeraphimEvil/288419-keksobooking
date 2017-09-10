@@ -89,6 +89,10 @@
     var mouseUpHandler = function (upEvent) {
       upEvent.preventDefault();
 
+      if (formModule.formAddressElement.hasAttribute('style')) {
+        formModule.formAddressElement.style = '';
+      }
+
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
     };

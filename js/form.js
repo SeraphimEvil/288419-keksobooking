@@ -100,8 +100,6 @@
 
     if (formAddressElement.value === '') {
       formAddressElement.style.border = dataModule.inputStatus.isErr;
-    } else {
-      formAddressElement.style.border = dataModule.inputStatus.isOk;
     }
 
     if (!isValid) {
