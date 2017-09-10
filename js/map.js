@@ -12,7 +12,10 @@
   var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
   var pinWidth = pinModule.pinMapMainElement.offsetWidth;
   var pinHeight = pinModule.pinMapMainElement.offsetHeight;
-  var startCoords = {};
+  var currentCoords = {};
+  var maxLeftPos = -(pinWidth / 2);
+  var maxRightPos = mapWidth - pinWidth / 2;
+  var maxBottomPos = mapHeight - pinHeight;
 
   var pinMapClickHandler = function (event) {
     cardModule.openDialog(event);
@@ -38,7 +41,7 @@
   var pinMapMainElementMousedownHandler = function (event) {
     event.preventDefault();
 
-    startCoords = {
+    currentCoords = {
       x: event.clientX,
       y: event.clientY
     };
@@ -51,53 +54,72 @@
     mouseEvent.preventDefault();
 
     var shift = {
-      x: startCoords.x - mouseEvent.clientX,
-      y: startCoords.y - mouseEvent.clientY
+      x: currentCoords.x - mouseEvent.clientX,
+      y: currentCoords.y - mouseEvent.clientY
     };
 
-    startCoords = {
+    currentCoords = {
       x: mouseEvent.clientX,
       y: mouseEvent.clientY
     };
 
-    var pinElementTop = pinModule.pinMapMainElement.offsetTop - shift.y;
-    var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shift.x;
+    var mainPinPos = {
+      x: calcMainPinPosX(shift.x),
+      y: calcMainPinPosY(shift.y)
+    };
 
-    pinModule.pinMapMainElement.style.top = getMainPinPosY(pinElementTop) + 'px';
-    pinModule.pinMapMainElement.style.left = getMainPinPosX(pinElementLeft) + 'px';
-    formModule.formAddressElement.value = 'x: ' + Math.floor(getMainPinPosX(pinElementLeft) + pinWidth / 2)
-       + ', y: ' + Math.floor(getMainPinPosY(pinElementTop) + pinHeight);
+    setMainPinPosCoords(mainPinPos.x, mainPinPos.y);
+    setAddressValue(mainPinPos.x, mainPinPos.y);
   };
 
-  var getMainPinPosY = function (pinElementTop) {
+  var setMainPinPosCoords = function (posX, posY) {
+    pinModule.pinMapMainElement.style.top = posY + 'px';
+    pinModule.pinMapMainElement.style.left = posX + 'px';
+  };
+
+  var setAddressValue = function (posX, posY) {
+    var addressPos = {
+      x: Math.floor(posX + pinWidth / 2),
+      y: Math.floor(posY + pinHeight)
+    };
+
+    formModule.formAddressElement.value = 'x: ' + addressPos.x + ', y: ' + addressPos.y;
+  };
+
+  var calcMainPinPosY = function (shiftY) {
+    var pinElementTop = pinModule.pinMapMainElement.offsetTop - shiftY;
+
     if (pinElementTop < 0) {
       pinElementTop = 0;
-      mouseUpHandler();
+      mouseUpHandler(event);
     }
 
-    if (pinElementTop > mapHeight - pinHeight) {
-      pinElementTop = mapHeight - pinHeight;
-      mouseUpHandler();
+    if (pinElementTop > maxBottomPos) {
+      pinElementTop = maxBottomPos;
+      mouseUpHandler(event);
     }
 
     return pinElementTop;
   };
 
-  var getMainPinPosX = function (pinElementLeft) {
-    if (pinElementLeft < 0) {
-      pinElementLeft = 0;
-      mouseUpHandler();
+  var calcMainPinPosX = function (shiftX) {
+    var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shiftX;
+
+    if (pinElementLeft < maxLeftPos) {
+      pinElementLeft = maxLeftPos;
+      mouseUpHandler(event);
     }
 
-    if (pinElementLeft > mapWidth - pinWidth) {
-      pinElementLeft = mapWidth - pinWidth;
-      mouseUpHandler();
+    if (pinElementLeft > maxRightPos) {
+      pinElementLeft = maxRightPos;
+      mouseUpHandler(event);
     }
 
     return pinElementLeft;
   };
 
-  var mouseUpHandler = function () {
+  var mouseUpHandler = function (event) {
+    event.preventDefault();
     document.removeEventListener('mousemove', mouseMoveHandler);
     document.removeEventListener('mouseup', mouseUpHandler);
   };
