@@ -6,9 +6,7 @@
   window.showCard = {
     isMouseClick: function (element, showCard) {
       element.addEventListener('click', function () {
-        if (typeof showCard === 'function') {
-          showCard();
-        }
+        showCard();
       });
     },
     isEnterKeydown: function (element, showCard) {

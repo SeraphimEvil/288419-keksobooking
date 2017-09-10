@@ -5,18 +5,10 @@
   var utilModule = window.util;
   var pinModule = window.pin;
   var formModule = window.form;
-  var dataModule = window.data;
   var showCardModule = window.showCard;
+
   var mapElement = document.querySelector('.tokyo');
   var filtesElement = document.querySelector('.tokyo__filters-container');
-
-  // var pinMapClickHandler = function (event) {
-  //   cardModule.openDialog(event);
-  // };
-
-  // var pinMapKeydownHandler = function (event) {
-  //   utilModule.isEnterEvent(event, cardModule.openDialog);
-  // };
 
   var closeClickHandler = function (event) {
     event.preventDefault();
@@ -106,12 +98,9 @@
   };
 
   document.addEventListener('keydown', escKeydownHandler);
-  // pinModule.pinMapElement.addEventListener('click', pinMapClickHandler);
-  // pinModule.pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
   cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
   cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
   pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousewodnHandler);
-
   showCardModule.isMouseClick(pinModule.pinMapElement, cardModule.openDialog);
   showCardModule.isEnterKeydown(pinModule.pinMapElement, cardModule.openDialog);
 })();
