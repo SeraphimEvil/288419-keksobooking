@@ -6,9 +6,18 @@
   var pinModule = window.pin;
   var formModule = window.form;
   var showCardModule = window.showCard;
+  var dataModule = window.data;
 
   var mapElement = document.querySelector('.tokyo');
   var filtesElement = document.querySelector('.tokyo__filters-container');
+  var mapWidth = mapElement.offsetWidth;
+  var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
+  var pinWidth = pinModule.pinMapMainElement.offsetWidth;
+  var pinHeight = pinModule.pinMapMainElement.offsetHeight;
+  var currentCoords = {};
+  var maxLeftPos = -(pinWidth / 2);
+  var maxRightPos = mapWidth - pinWidth / 2;
+  var maxBottomPos = mapHeight - pinHeight;
 
   var closeClickHandler = function (event) {
     event.preventDefault();
@@ -23,88 +32,101 @@
     utilModule.isEscEvent(event, cardModule.closeDialog);
   };
 
-  var pinMapMainElementMousewodnHandler = function (event) {
+  var pinMapMainElementMousedownHandler = function (event) {
     event.preventDefault();
 
-    var startCoords = {
+    currentCoords = {
       x: event.clientX,
       y: event.clientY
-    };
-
-    var mapWidth = mapElement.offsetWidth;
-    var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
-    var pinWidth = pinModule.pinMapMainElement.offsetWidth;
-    var pinHeight = pinModule.pinMapMainElement.offsetHeight;
-
-    var mouseMoveHandler = function (mouseEvent) {
-      mouseEvent.preventDefault();
-
-      var shift = {
-        x: startCoords.x - mouseEvent.clientX,
-        y: startCoords.y - mouseEvent.clientY
-      };
-
-      var pinElementTop = pinModule.pinMapMainElement.offsetTop - shift.y;
-      var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shift.x;
-
-      startCoords = {
-        x: mouseEvent.clientX,
-        y: mouseEvent.clientY
-      };
-
-      var getMainPinPosY = function () {
-        if (pinElementTop < 0) {
-          pinElementTop = 0;
-          mouseUpHandler(mouseEvent);
-        }
-
-        if (pinElementTop > mapHeight - pinHeight) {
-          pinElementTop = mapHeight - pinHeight;
-          mouseUpHandler(mouseEvent);
-        }
-
-        return pinElementTop;
-      };
-
-      var getMainPinPosX = function () {
-        if (pinElementLeft < 0) {
-          pinElementLeft = 0;
-          mouseUpHandler(mouseEvent);
-        }
-
-        if (pinElementLeft > mapWidth - pinWidth) {
-          pinElementLeft = mapWidth - pinWidth;
-          mouseUpHandler(mouseEvent);
-        }
-
-        return pinElementLeft;
-      };
-
-      pinModule.pinMapMainElement.style.top = getMainPinPosY() + 'px';
-      pinModule.pinMapMainElement.style.left = getMainPinPosX() + 'px';
-      formModule.formAddressElement.value = 'x: ' + (getMainPinPosX() + pinWidth / 2)
-         + ', y: ' + (getMainPinPosY() + pinHeight);
-    };
-
-    var mouseUpHandler = function (upEvent) {
-      upEvent.preventDefault();
-
-      if (formModule.formAddressElement.hasAttribute('style')) {
-        formModule.formAddressElement.style = '';
-      }
-
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
     };
 
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
+  var mouseMoveHandler = function (mouseEvent) {
+    mouseEvent.preventDefault();
+
+    var shift = {
+      x: currentCoords.x - mouseEvent.clientX,
+      y: currentCoords.y - mouseEvent.clientY
+    };
+
+    currentCoords = {
+      x: mouseEvent.clientX,
+      y: mouseEvent.clientY
+    };
+
+    var mainPinPos = {
+      x: calcMainPinPosX(shift.x),
+      y: calcMainPinPosY(shift.y)
+    };
+
+    setMainPinPosCoords(mainPinPos.x, mainPinPos.y);
+    setAddressValue(mainPinPos.x, mainPinPos.y);
+  };
+
+  var setMainPinPosCoords = function (posX, posY) {
+    pinModule.pinMapMainElement.style.top = posY + 'px';
+    pinModule.pinMapMainElement.style.left = posX + 'px';
+  };
+
+  var setAddressValue = function (posX, posY) {
+    var addressPos = {
+      x: Math.floor(posX + pinWidth / 2),
+      y: Math.floor(posY + pinHeight)
+    };
+
+    formModule.formAddressElement.value = 'x: ' + addressPos.x + ', y: ' + addressPos.y;
+  };
+
+  var calcMainPinPosY = function (shiftY) {
+    var pinElementTop = pinModule.pinMapMainElement.offsetTop - shiftY;
+
+    if (pinElementTop < 0) {
+      pinElementTop = 0;
+      mouseUpHandler(event);
+    }
+
+    if (pinElementTop > maxBottomPos) {
+      pinElementTop = maxBottomPos;
+      mouseUpHandler(event);
+    }
+
+    return pinElementTop;
+  };
+
+  var calcMainPinPosX = function (shiftX) {
+    var pinElementLeft = pinModule.pinMapMainElement.offsetLeft - shiftX;
+
+    if (pinElementLeft < maxLeftPos) {
+      pinElementLeft = maxLeftPos;
+      mouseUpHandler(event);
+    }
+
+    if (pinElementLeft > maxRightPos) {
+      pinElementLeft = maxRightPos;
+      mouseUpHandler(event);
+    }
+
+    return pinElementLeft;
+  };
+
+  var mouseUpHandler = function (event) {
+    event.preventDefault();
+
+    if (formModule.formAddressElement.hasAttribute('style')) {
+      formModule.formAddressElement.style.border = dataModule.inputStatus.IS_RIGHT;
+    }
+
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+  };
+
   document.addEventListener('keydown', escKeydownHandler);
   cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
   cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
-  pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousewodnHandler);
-  showCardModule.isMouseClick(pinModule.pinMapElement, cardModule.openDialog);
-  showCardModule.isEnterKeydown(pinModule.pinMapElement, cardModule.openDialog);
+  pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousedownHandler);
+  showCardModule.mouseClickEvent(pinModule.pinMapElement, cardModule.openDialog);
+  showCardModule.enterKeydownEvent(pinModule.pinMapElement, cardModule.openDialog);
 })();

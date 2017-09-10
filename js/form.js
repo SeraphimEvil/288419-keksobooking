@@ -96,10 +96,10 @@
     syncMinPrice(priceCountElement, housingTypeElement.value);
     syncCapacityCount(capacityCountElement, roomNumberElement.value);
 
-    isValid = priceCountElement.validity.valid && formAddressElement.value !== '';
+    isValid = priceCountElement.validity.valid && formAddressElement.value.length !== 0;
 
-    if (formAddressElement.value === '') {
-      formAddressElement.style.border = dataModule.inputStatus.isErr;
+    if (formAddressElement.value.length === 0) {
+      formAddressElement.style.border = dataModule.inputStatus.IS_ERROR;
     }
 
     if (!isValid) {

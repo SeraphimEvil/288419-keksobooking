@@ -2,8 +2,8 @@
 
 (function () {
   var inputStatus = {
-    isOk: '1px solid #d9d9d3',
-    isErr: '1px solid crimson'
+    IS_ERROR: '1px solid crimson',
+    IS_RIGHT: '1px solid #d9d9d3'
   };
 
   var pinLocationCorrection = {
