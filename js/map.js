@@ -45,8 +45,6 @@
 
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
-
-    return startCoords;
   };
 
   var mouseMoveHandler = function (mouseEvent) {
