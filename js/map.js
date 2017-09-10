@@ -8,10 +8,6 @@
 
   var mapElement = document.querySelector('.tokyo');
   var filtesElement = document.querySelector('.tokyo__filters-container');
-  var mapWidth = mapElement.offsetWidth;
-  var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
-  var pinWidth = pinModule.pinMapMainElement.offsetWidth;
-  var pinHeight = pinModule.pinMapMainElement.offsetHeight;
 
   var pinMapClickHandler = function (event) {
     cardModule.openDialog(event);
@@ -41,6 +37,11 @@
       x: event.clientX,
       y: event.clientY
     };
+
+    var mapWidth = mapElement.offsetWidth;
+    var mapHeight = mapElement.offsetHeight - filtesElement.offsetHeight;
+    var pinWidth = pinModule.pinMapMainElement.offsetWidth;
+    var pinHeight = pinModule.pinMapMainElement.offsetHeight;
 
     var mouseMoveHandler = function (mouseEvent) {
       mouseEvent.preventDefault();
