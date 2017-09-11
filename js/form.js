@@ -98,7 +98,7 @@
 
     isValid = priceCountElement.validity.valid && formAddressElement.value.length !== 0;
 
-    if (formAddressElement.value.length === 0) {
+    if (formAddressElement.value === '') {
       formAddressElement.style.border = dataModule.inputStatus.IS_ERROR;
     }
 

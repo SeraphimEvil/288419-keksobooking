@@ -4,12 +4,12 @@
   var utilModule = window.util;
 
   window.showCard = {
-    mouseClickEvent: function (element, showCard) {
+    mouseEventHandler: function (element, showCard) {
       element.addEventListener('click', function () {
         showCard();
       });
     },
-    enterKeydownEvent: function (element, showCard) {
+    keydownEventHandler: function (element, showCard) {
       element.addEventListener('keydown', function () {
         utilModule.isEnterEvent(event, showCard);
       });

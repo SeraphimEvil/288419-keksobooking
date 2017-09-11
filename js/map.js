@@ -129,6 +129,6 @@
   cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
   cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
   pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousedownHandler);
-  showCardModule.mouseClickEvent(pinModule.pinMapElement, cardModule.openDialog);
-  showCardModule.enterKeydownEvent(pinModule.pinMapElement, cardModule.openDialog);
+  showCardModule.mouseEventHandler(pinModule.pinMapElement, cardModule.openDialog);
+  showCardModule.keydownEventHandler(pinModule.pinMapElement, cardModule.openDialog);
 })();
