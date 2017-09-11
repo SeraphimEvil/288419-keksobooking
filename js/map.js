@@ -44,17 +44,17 @@
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
-  var mouseMoveHandler = function (mouseEvent) {
-    mouseEvent.preventDefault();
+  var mouseMoveHandler = function (event) {
+    event.preventDefault();
 
     var shift = {
-      x: currentCoords.x - mouseEvent.clientX,
-      y: currentCoords.y - mouseEvent.clientY
+      x: currentCoords.x - event.clientX,
+      y: currentCoords.y - event.clientY
     };
 
     currentCoords = {
-      x: mouseEvent.clientX,
-      y: mouseEvent.clientY
+      x: event.clientX,
+      y: event.clientY
     };
 
     var mainPinPos = {
@@ -85,12 +85,12 @@
 
     if (pinElementTop < 0) {
       pinElementTop = 0;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     if (pinElementTop > maxBottomPos) {
       pinElementTop = maxBottomPos;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     return pinElementTop;
@@ -101,12 +101,12 @@
 
     if (pinElementLeft < maxLeftPos) {
       pinElementLeft = maxLeftPos;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     if (pinElementLeft > maxRightPos) {
       pinElementLeft = maxRightPos;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     return pinElementLeft;
@@ -119,6 +119,10 @@
       formModule.formAddressElement.style.border = dataModule.inputStatus.IS_RIGHT;
     }
 
+    stopMouse();
+  };
+
+  var stopMouse = function () {
     document.removeEventListener('mousemove', mouseMoveHandler);
     document.removeEventListener('mouseup', mouseUpHandler);
   };
