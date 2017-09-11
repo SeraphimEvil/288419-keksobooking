@@ -50,17 +50,17 @@
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
-  var mouseMoveHandler = function (mouseEvent) {
-    mouseEvent.preventDefault();
+  var mouseMoveHandler = function (event) {
+    event.preventDefault();
 
     var shift = {
-      x: currentCoords.x - mouseEvent.clientX,
-      y: currentCoords.y - mouseEvent.clientY
+      x: currentCoords.x - event.clientX,
+      y: currentCoords.y - event.clientY
     };
 
     currentCoords = {
-      x: mouseEvent.clientX,
-      y: mouseEvent.clientY
+      x: event.clientX,
+      y: event.clientY
     };
 
     var mainPinPos = {
