@@ -62,19 +62,19 @@
       y: calcMainPinPosY(shift.y)
     };
 
-    setMainPinPosCoords(mainPinPos.x, mainPinPos.y);
-    setAddressValue(mainPinPos.x, mainPinPos.y);
+    setMainPinPosCoords(mainPinPos);
+    setAddressValue(mainPinPos);
   };
 
-  var setMainPinPosCoords = function (posX, posY) {
-    pinModule.pinMapMainElement.style.top = posY + 'px';
-    pinModule.pinMapMainElement.style.left = posX + 'px';
+  var setMainPinPosCoords = function (mainPinPos) {
+    pinModule.pinMapMainElement.style.top = mainPinPos.y + 'px';
+    pinModule.pinMapMainElement.style.left = mainPinPos.x + 'px';
   };
 
-  var setAddressValue = function (posX, posY) {
+  var setAddressValue = function (mainPinPos) {
     var addressPos = {
-      x: Math.floor(posX + pinWidth / 2),
-      y: Math.floor(posY + pinHeight)
+      x: Math.floor(mainPinPos.x + pinWidth / 2),
+      y: Math.floor(mainPinPos.y + pinHeight)
     };
 
     formModule.formAddressElement.value = 'x: ' + addressPos.x + ', y: ' + addressPos.y;
@@ -112,9 +112,7 @@
     return pinElementLeft;
   };
 
-  var mouseUpHandler = function (event) {
-    event.preventDefault();
-
+  var mouseUpHandler = function () {
     if (formModule.formAddressElement.hasAttribute('style')) {
       formModule.formAddressElement.style.border = dataModule.inputStatus.IS_RIGHT;
     }
