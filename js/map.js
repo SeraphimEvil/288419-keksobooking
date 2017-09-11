@@ -91,12 +91,12 @@
 
     if (pinElementTop < 0) {
       pinElementTop = 0;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     if (pinElementTop > maxBottomPos) {
       pinElementTop = maxBottomPos;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     return pinElementTop;
@@ -107,12 +107,12 @@
 
     if (pinElementLeft < maxLeftPos) {
       pinElementLeft = maxLeftPos;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     if (pinElementLeft > maxRightPos) {
       pinElementLeft = maxRightPos;
-      mouseUpHandler(event);
+      stopMouse();
     }
 
     return pinElementLeft;
@@ -120,6 +120,10 @@
 
   var mouseUpHandler = function (event) {
     event.preventDefault();
+    stopMouse();
+  };
+
+  var stopMouse = function () {
     document.removeEventListener('mousemove', mouseMoveHandler);
     document.removeEventListener('mouseup', mouseUpHandler);
   };
