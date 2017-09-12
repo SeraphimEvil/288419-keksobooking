@@ -5,6 +5,8 @@
   var utilModule = window.util;
   var pinModule = window.pin;
   var formModule = window.form;
+  var showCardModule = window.showCard;
+  var dataModule = window.data;
 
   var mapElement = document.querySelector('.tokyo');
   var filtesElement = document.querySelector('.tokyo__filters-container');
@@ -16,14 +18,6 @@
   var maxLeftPos = -(pinWidth / 2);
   var maxRightPos = mapWidth - pinWidth / 2;
   var maxBottomPos = mapHeight - pinHeight;
-
-  var pinMapClickHandler = function (event) {
-    cardModule.openDialog(event);
-  };
-
-  var pinMapKeydownHandler = function (event) {
-    utilModule.isEnterEvent(event, cardModule.openDialog);
-  };
 
   var closeClickHandler = function (event) {
     event.preventDefault();
@@ -119,6 +113,10 @@
   };
 
   var mouseUpHandler = function () {
+    if (formModule.formAddressElement.hasAttribute('style')) {
+      formModule.formAddressElement.style.border = dataModule.inputStatus.IS_RIGHT;
+    }
+
     stopMouse();
   };
 
@@ -128,9 +126,9 @@
   };
 
   document.addEventListener('keydown', escKeydownHandler);
-  pinModule.pinMapElement.addEventListener('click', pinMapClickHandler);
-  pinModule.pinMapElement.addEventListener('keydown', pinMapKeydownHandler);
   cardModule.dialogCloseElement.addEventListener('click', closeClickHandler);
   cardModule.dialogCloseElement.addEventListener('keydown', closeKeydownHandler);
   pinModule.pinMapMainElement.addEventListener('mousedown', pinMapMainElementMousedownHandler);
+  showCardModule.addClickListener(pinModule.pinMapElement, cardModule.openDialog);
+  showCardModule.addKeydownListener(pinModule.pinMapElement, cardModule.openDialog);
 })();

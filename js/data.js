@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  var inputStatus = {
+    IS_ERROR: '1px solid crimson',
+    IS_RIGHT: '1px solid #d9d9d3'
+  };
+
   var pinLocationCorrection = {
     X: 28,
     Y: 75
@@ -54,6 +59,7 @@
     capacityCount: capacityCount,
     roomsCount: roomsCount,
     housingType: housingType,
-    pinLocationCorrection: pinLocationCorrection
+    pinLocationCorrection: pinLocationCorrection,
+    inputStatus: inputStatus
   };
 })();

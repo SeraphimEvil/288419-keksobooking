@@ -2,6 +2,7 @@
 
 (function () {
   var dataModule = window.data;
+  var synchronizeFieldsModule = window.synchronizeFields;
 
   var checkInElement = document.querySelector('#timein');
   var checkOutElement = document.querySelector('#timeout');
@@ -17,18 +18,14 @@
     return Math.floor(min + Math.random() * (max + 1 - min));
   };
 
-  var checkInElementChangeHandler = function () {
-    checkOutElement.value = checkInElement.value;
+  var syncValue = function (element, value) {
+    element.value = value;
   };
 
-  var checkOutElementChangeHandler = function () {
-    checkInElement.value = checkOutElement.value;
-  };
-
-  var checkHousingType = function () {
+  var syncMinPrice = function (element, value) {
     var minPriceValue = dataModule.prices.ZERO;
 
-    switch (housingTypeElement.value) {
+    switch (value) {
       case dataModule.housingType.FLAT:
         minPriceValue = dataModule.prices.ONE_THOUSAND;
         break;
@@ -39,17 +36,13 @@
         minPriceValue = dataModule.prices.TEN_THOUSAND;
     }
 
-    priceCountElement.min = minPriceValue;
+    element.min = minPriceValue;
   };
 
-  var housingTypeElementChangeHandler = function () {
-    checkHousingType();
-  };
-
-  var checkRoomNumber = function () {
+  var syncCapacityCount = function (element, value) {
     var roomsValue = 1;
 
-    switch (roomNumberElement.value) {
+    switch (value) {
       case dataModule.roomsCount.TWO:
         roomsValue = getRandomNumber(1, 2);
         break;
@@ -60,17 +53,14 @@
         roomsValue = 0;
     }
 
-    capacityCountElement.value = roomsValue;
+    element.value = roomsValue;
   };
 
-  var roomNumberElementChangeHandler = function () {
-    checkRoomNumber();
-  };
+  var syncRoomCount = function (element, value) {
 
-  var checkCapacityCount = function () {
     var capacityValue = 1;
 
-    switch (capacityCountElement.value) {
+    switch (value) {
       case dataModule.capacityCount.ONE:
         capacityValue = getRandomNumber(1, 3);
         break;
@@ -84,11 +74,7 @@
         capacityValue = 100;
     }
 
-    roomNumberElement.value = capacityValue;
-  };
-
-  var capacityCountElementChangeHandler = function () {
-    checkCapacityCount();
+    element.value = capacityValue;
   };
 
   var offerTitleElementInputHandler = function () {
@@ -107,10 +93,14 @@
   var formOfferElementSubmitHandler = function (event) {
     var isValid = false;
 
-    checkHousingType();
-    checkRoomNumber();
+    syncMinPrice(priceCountElement, housingTypeElement.value);
+    syncCapacityCount(capacityCountElement, roomNumberElement.value);
 
-    isValid = priceCountElement.validity.valid && capacityCountElement.validity.valid;
+    isValid = priceCountElement.validity.valid && formAddressElement.value.length !== 0;
+
+    if (formAddressElement.value === '') {
+      formAddressElement.style.border = dataModule.inputStatus.IS_ERROR;
+    }
 
     if (!isValid) {
       event.preventDefault();
@@ -121,11 +111,11 @@
     }
   };
 
-  checkInElement.addEventListener('change', checkInElementChangeHandler);
-  checkOutElement.addEventListener('change', checkOutElementChangeHandler);
-  housingTypeElement.addEventListener('change', housingTypeElementChangeHandler);
-  roomNumberElement.addEventListener('change', roomNumberElementChangeHandler);
-  capacityCountElement.addEventListener('change', capacityCountElementChangeHandler);
+  synchronizeFieldsModule(checkInElement, checkOutElement, syncValue);
+  synchronizeFieldsModule(checkOutElement, checkInElement, syncValue);
+  synchronizeFieldsModule(housingTypeElement, priceCountElement, syncMinPrice);
+  synchronizeFieldsModule(roomNumberElement, capacityCountElement, syncCapacityCount);
+  synchronizeFieldsModule(capacityCountElement, roomNumberElement, syncRoomCount);
   offerTitleElement.addEventListener('input', offerTitleElementInputHandler);
   formOfferElement.addEventListener('submit', formOfferElementSubmitHandler);
 
