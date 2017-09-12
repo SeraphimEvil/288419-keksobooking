@@ -3,6 +3,7 @@
 (function () {
   var dataModule = window.data;
   var backendModule = window.backend;
+  var errorMessage = window.errorMessage;
 
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
@@ -48,7 +49,7 @@
     pinMapElement.appendChild(fragmentElement);
   };
 
-  window.backend.load(renderPinMarker, backendModule.error);
+  backendModule.load(renderPinMarker, errorMessage);
 
   window.pin = {
     activePinElement: activePinElement,

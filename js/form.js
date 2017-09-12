@@ -4,6 +4,7 @@
   var backendModule = window.backend;
   var dataModule = window.data;
   var synchronizeFieldsModule = window.synchronizeFields;
+  var errorMessage = window.errorMessage;
 
   var checkInElement = document.querySelector('#timein');
   var checkOutElement = document.querySelector('#timeout');
@@ -15,14 +16,17 @@
   var formAddressElement = document.querySelector('#address');
   var formOfferElement = document.querySelector('.notice__form');
 
+  // получает случайное чисти от min до max
   var getRandomNumber = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   };
 
+  // синхронизирует значения (времени)
   var syncValue = function (element, value) {
     element.value = value;
   };
 
+  // синхронизирует значения (цены)
   var syncMinPrice = function (element, value) {
     var minPriceValue = dataModule.prices.ZERO;
 
@@ -40,6 +44,7 @@
     element.min = minPriceValue;
   };
 
+  // синхронизирует значения (посетителей)
   var syncCapacityCount = function (element, value) {
     var roomsValue = 1;
 
@@ -57,6 +62,7 @@
     element.value = roomsValue;
   };
 
+  // синхронизирует значения (комнат)
   var syncRoomCount = function (element, value) {
 
     var capacityValue = 1;
@@ -78,6 +84,7 @@
     element.value = capacityValue;
   };
 
+  // следит за кол-ом введенных символов в поле Заголовка
   var offerTitleElementInputHandler = function () {
     var inputLength = offerTitleElement.value.length;
     var customValidityMessage = '';
@@ -91,12 +98,14 @@
     offerTitleElement.setCustomValidity(customValidityMessage);
   };
 
-  var sendForm = function () {
+  // сбрасывает форму
+  var resetForm = function () {
     setTimeout(function () {
       formOfferElement.reset();
     });
   };
 
+  // обработка нажатия "отправить форму". PS форма отправляется на сервер без перезагрузки страницы
   var formOfferElementSubmitHandler = function (event) {
     event.preventDefault();
 
@@ -110,7 +119,7 @@
     }
 
     if (isValid) {
-      backendModule.save(new FormData(formOfferElement), sendForm, backendModule.error);
+      backendModule.save(new FormData(formOfferElement), resetForm, errorMessage);
     }
   };
 
