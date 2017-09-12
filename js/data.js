@@ -1,20 +1,6 @@
 'use strict';
 
 (function () {
-  var errorMessageStyle = {
-    position: 'fixed',
-    left: 0,
-    right: 0,
-    top: 0,
-    padding: '20px',
-    fontSize: '40px',
-    zIndex: 101,
-    margin: '0 auto',
-    textAlign: 'center',
-    backgroundColor: 'red',
-    color: '#fff'
-  };
-
   var inputStatus = {
     IS_ERROR: '1px solid crimson',
     IS_RIGHT: '1px solid #d9d9d3'
@@ -53,28 +39,15 @@
     TEN_THOUSAND: 10000
   };
 
-  var authorAvatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
-  var offerTitles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-  var offerTypes = ['flat', 'house', 'bungalo'];
-  var offerTimes = ['12:00', '13:00', '14:00'];
-  var offerFeauteres = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var pinMarkerArr = [];
-  var PINS_COUNT = authorAvatars.length;
 
   window.data = {
-    authorAvatars: authorAvatars,
-    offerTitles: offerTitles,
-    offerTypes: offerTypes,
-    offerTimes: offerTimes,
-    offerFeauteres: offerFeauteres,
     pinMarkerArr: pinMarkerArr,
-    PINS_COUNT: PINS_COUNT,
     prices: prices,
     capacityCount: capacityCount,
     roomsCount: roomsCount,
     housingType: housingType,
     pinLocationCorrection: pinLocationCorrection,
-    inputStatus: inputStatus,
-    errorMessageStyle: errorMessageStyle
+    inputStatus: inputStatus
   };
 })();

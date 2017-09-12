@@ -92,22 +92,9 @@
   };
 
   var sendForm = function () {
-    // console.log('йа отправилос!');
     setTimeout(function () {
       formOfferElement.reset();
     });
-  };
-
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
   };
 
   var formOfferElementSubmitHandler = function (event) {
@@ -122,10 +109,8 @@
       formAddressElement.style.border = dataModule.inputStatus.IS_ERROR;
     }
 
-    if (!isValid) {
-      // console.log('тут ошибко!')
-    } else {
-      backendModule.save(new FormData(formOfferElement), sendForm, errorHandler);
+    if (isValid) {
+      backendModule.save(new FormData(formOfferElement), sendForm, backendModule.error);
     }
   };
 

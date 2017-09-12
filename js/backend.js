@@ -2,6 +2,7 @@
 
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/keksobooking';
+  var errorMessageElement = document.querySelector('#error-template').content;
 
   var addLoadListener = function (element, onSuccess, onError) {
     element.addEventListener('load', function () {
@@ -37,6 +38,17 @@
     return xhr;
   };
 
+  var renderErrorMessage = function (errorMessage) {
+    var errorElement = document.createDocumentFragment();
+    var errorMessageContainer = errorMessageElement.cloneNode(true);
+    var errorMessageContent = errorMessageContainer.querySelector('.error-message');
+
+    errorMessageContent.textContent = errorMessage;
+
+    errorElement.appendChild(errorMessageContainer);
+    document.body.appendChild(errorElement);
+  };
+
   window.backend = {
     load: function (onSuccess, onError) {
       var xhr = createXhrRequest(onSuccess, onError);
@@ -49,6 +61,7 @@
 
       xhr.open('POST', SERVER_URL);
       xhr.send(data);
-    }
+    },
+    error: renderErrorMessage
   };
 })();
