@@ -10,6 +10,7 @@
   var roomNumberElement = document.querySelector('#room_number');
   var capacityCountElement = document.querySelector('#capacity');
   var offerTitleElement = document.querySelector('#title');
+  var formAddressElement = document.querySelector('#address');
   var formOfferElement = document.querySelector('.notice__form');
 
   var getRandomNumber = function (min, max) {
@@ -127,4 +128,8 @@
   capacityCountElement.addEventListener('change', capacityCountElementChangeHandler);
   offerTitleElement.addEventListener('input', offerTitleElementInputHandler);
   formOfferElement.addEventListener('submit', formOfferElementSubmitHandler);
+
+  window.form = {
+    formAddressElement: formAddressElement
+  };
 })();
