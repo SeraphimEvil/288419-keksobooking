@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var backendModule = window.backend;
   var dataModule = window.data;
   var synchronizeFieldsModule = window.synchronizeFields;
 
@@ -90,24 +91,41 @@
     offerTitleElement.setCustomValidity(customValidityMessage);
   };
 
+  var sendForm = function () {
+    // console.log('йа отправилос!');
+    setTimeout(function () {
+      formOfferElement.reset();
+    });
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
   var formOfferElementSubmitHandler = function (event) {
-    var isValid = false;
+    event.preventDefault();
 
     syncMinPrice(priceCountElement, housingTypeElement.value);
     syncCapacityCount(capacityCountElement, roomNumberElement.value);
 
-    isValid = priceCountElement.validity.valid && formAddressElement.value.length !== 0;
+    var isValid = priceCountElement.validity.valid && formAddressElement.value !== '';
 
     if (formAddressElement.value === '') {
       formAddressElement.style.border = dataModule.inputStatus.IS_ERROR;
     }
 
     if (!isValid) {
-      event.preventDefault();
+      // console.log('тут ошибко!')
     } else {
-      setTimeout(function () {
-        formOfferElement.reset();
-      });
+      backendModule.save(new FormData(formOfferElement), sendForm, errorHandler);
     }
   };
 

@@ -665,3 +665,17 @@ select option:hover {
 .rounded {
     border-radius: 50%;
 }
+
+.error-message {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 20px;
+  font-size: 40px;
+  z-index: 101;
+  margin: 0 auto;
+  text-align: center;
+  background-color: red;
+  color: #fff;
+}

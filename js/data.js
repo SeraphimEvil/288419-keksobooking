@@ -1,6 +1,20 @@
 'use strict';
 
 (function () {
+  var errorMessageStyle = {
+    position: 'fixed',
+    left: 0,
+    right: 0,
+    top: 0,
+    padding: '20px',
+    fontSize: '40px',
+    zIndex: 101,
+    margin: '0 auto',
+    textAlign: 'center',
+    backgroundColor: 'red',
+    color: '#fff'
+  };
+
   var inputStatus = {
     IS_ERROR: '1px solid crimson',
     IS_RIGHT: '1px solid #d9d9d3'
@@ -60,6 +74,7 @@
     roomsCount: roomsCount,
     housingType: housingType,
     pinLocationCorrection: pinLocationCorrection,
-    inputStatus: inputStatus
+    inputStatus: inputStatus,
+    errorMessageStyle: errorMessageStyle
   };
 })();
