@@ -4,60 +4,60 @@
   var SERVER_URL = 'https://1510.dump.academy/keksobooking';
   var errorMessageElement = document.querySelector('#error-template').content;
 
-  var addLoadListener = function (element, onSuccess, onError) {
+  var addLoadListener = function (element, success, error) {
     element.addEventListener('load', function () {
       if (element.status === 200) {
-        onSuccess(element.response);
+        success(element.response);
       } else {
-        onError('Ошибка! Код ответа: ' + element.status + ' ' + element.statusText);
+        error('Ошибка! Код ответа: ' + element.status + ' ' + element.statusText);
       }
     });
   };
 
-  var addErrorListener = function (element, onError) {
+  var addErrorListener = function (element, error) {
     element.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      error('Произошла ошибка соединения');
     });
   };
 
-  var addTimeoutListener = function (element, onError) {
+  var addTimeoutListener = function (element, error) {
     element.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за: ' + element.timeout + 'мс');
+      error('Запрос не успел выполниться за: ' + element.timeout + 'ms');
     });
   };
 
-  var createXhrRequest = function (onSuccess, onError) {
+  var createXhrRequest = function (success, error) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = 10000;
 
-    addLoadListener(xhr, onSuccess, onError);
-    addErrorListener(xhr, onError);
-    addTimeoutListener(xhr, onError);
+    addLoadListener(xhr, success, error);
+    addErrorListener(xhr, error);
+    addTimeoutListener(xhr, error);
 
     return xhr;
   };
 
   var renderErrorMessage = function (errorMessage) {
-    var errorElement = document.createDocumentFragment();
-    var errorMessageContainer = errorMessageElement.cloneNode(true);
-    var errorMessageContent = errorMessageContainer.querySelector('.error-message');
+    var errorFragment = document.createDocumentFragment();
+    var errorElement = errorMessageElement.cloneNode(true);
+    var errorMessageContent = errorElement.querySelector('.error-message');
 
     errorMessageContent.textContent = errorMessage;
 
-    errorElement.appendChild(errorMessageContainer);
-    document.body.appendChild(errorElement);
+    errorFragment.appendChild(errorElement);
+    document.body.appendChild(errorFragment);
   };
 
   window.backend = {
-    load: function (onSuccess, onError) {
-      var xhr = createXhrRequest(onSuccess, onError);
+    load: function (success, error) {
+      var xhr = createXhrRequest(success, error);
 
       xhr.open('GET', SERVER_URL + '/data');
       xhr.send();
     },
-    save: function (data, onSuccess, onError) {
-      var xhr = createXhrRequest(onSuccess, onError);
+    save: function (data, success, error) {
+      var xhr = createXhrRequest(success, error);
 
       xhr.open('POST', SERVER_URL);
       xhr.send(data);
