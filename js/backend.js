@@ -8,19 +8,19 @@
     xhr.responseType = 'json';
     xhr.timeout = 10000;
 
-    xhr.addEventListener('load', createXhrLoadHandler(success, error));
+    xhr.addEventListener('load', createXhrLoadHandler(xhr, success, error));
     xhr.addEventListener('error', createXhrErrorHandler(error));
-    xhr.addEventListener('timeout', createXhrTimeoutHandler(error));
+    xhr.addEventListener('timeout', createXhrTimeoutHandler(xhr, error));
 
     return xhr;
   };
 
-  var createXhrLoadHandler = function (success, error) {
-    return function (event) {
-      if (event.target.status === 200) {
-        success(event.target.response);
+  var createXhrLoadHandler = function (xhr, success, error) {
+    return function () {
+      if (xhr.status === 200) {
+        success(xhr.response);
       } else {
-        error('Ошибка! Код ответа: ' + event.target.status + ' ' + event.target.statusText);
+        error('Ошибка! Код ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     };
   };
@@ -31,9 +31,9 @@
     };
   };
 
-  var createXhrTimeoutHandler = function (error) {
-    return function (event) {
-      error('Запрос не успел выполниться за: ' + event.target.timeout + 'ms');
+  var createXhrTimeoutHandler = function (xhr, error) {
+    return function () {
+      error('Запрос не успел выполниться за: ' + xhr.timeout + 'ms');
     };
   };
 
