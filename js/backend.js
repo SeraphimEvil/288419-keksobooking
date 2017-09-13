@@ -8,14 +8,14 @@
     xhr.responseType = 'json';
     xhr.timeout = 10000;
 
-    xhr.addEventListener('load', xhrLoadHandler(success, error));
-    xhr.addEventListener('error', xhrErrorHandler(error));
-    xhr.addEventListener('timeout', xhrTimeoutHandler(error));
+    xhr.addEventListener('load', xhrLoadCreateHandler(success, error));
+    xhr.addEventListener('error', xhrErrorCreateHandler(error));
+    xhr.addEventListener('timeout', xhrTimeoutCreateHandler(error));
 
     return xhr;
   };
 
-  var xhrLoadHandler = function (success, error) {
+  var xhrLoadCreateHandler = function (success, error) {
     return function (event) {
       if (event.target.status === 200) {
         success(event.target.response);
@@ -25,13 +25,13 @@
     };
   };
 
-  var xhrErrorHandler = function (error) {
+  var xhrErrorCreateHandler = function (error) {
     return function () {
       error('Произошла ошибка соединения');
     };
   };
 
-  var xhrTimeoutHandler = function (error) {
+  var xhrTimeoutCreateHandler = function (error) {
     return function (event) {
       error('Запрос не успел выполниться за: ' + event.target.timeout + 'ms');
     };
