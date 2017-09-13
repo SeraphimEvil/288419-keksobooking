@@ -8,21 +8,33 @@
     xhr.responseType = 'json';
     xhr.timeout = 10000;
 
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        success(xhr.response);
-      } else {
-        error('Ошибка! Код ответа: ' + xhr.status + ' ' + xhr.statusText);
-      }
-    });
-    xhr.addEventListener('error', function () {
-      error('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      error('Запрос не успел выполниться за: ' + xhr.timeout + 'ms');
-    });
+    xhr.addEventListener('load', xhrLoadHandler(success, error));
+    xhr.addEventListener('error', xhrErrorHandler(error));
+    xhr.addEventListener('timeout', xhrTimeoutHandler(error));
 
     return xhr;
+  };
+
+  var xhrLoadHandler = function (success, error) {
+    return function (event) {
+      if (event.target.status === 200) {
+        success(event.target.response);
+      } else {
+        error('Ошибка! Код ответа: ' + event.target.status + ' ' + event.target.statusText);
+      }
+    };
+  };
+
+  var xhrErrorHandler = function (error) {
+    return function () {
+      error('Произошла ошибка соединения');
+    };
+  };
+
+  var xhrTimeoutHandler = function (error) {
+    return function (event) {
+      error('Запрос не успел выполниться за: ' + event.target.timeout + 'ms');
+    };
   };
 
   window.backend = {
