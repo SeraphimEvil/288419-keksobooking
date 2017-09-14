@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
+  var backendModule = window.backend;
   var dataModule = window.data;
   var synchronizeFieldsModule = window.synchronizeFields;
+  var renderErrorMessage = window.renderErrorMessage;
 
   var checkInElement = document.querySelector('#timein');
   var checkOutElement = document.querySelector('#timeout');
@@ -14,14 +16,17 @@
   var formAddressElement = document.querySelector('#address');
   var formOfferElement = document.querySelector('.notice__form');
 
+  // получает случайное чисти от min до max
   var getRandomNumber = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   };
 
+  // синхронизирует значения (времени)
   var syncValue = function (element, value) {
     element.value = value;
   };
 
+  // синхронизирует значения (цены)
   var syncMinPrice = function (element, value) {
     var minPriceValue = dataModule.prices.ZERO;
 
@@ -39,6 +44,7 @@
     element.min = minPriceValue;
   };
 
+  // синхронизирует значения (посетителей)
   var syncCapacityCount = function (element, value) {
     var roomsValue = 1;
 
@@ -56,6 +62,7 @@
     element.value = roomsValue;
   };
 
+  // синхронизирует значения (комнат)
   var syncRoomCount = function (element, value) {
 
     var capacityValue = 1;
@@ -77,6 +84,7 @@
     element.value = capacityValue;
   };
 
+  // следит за кол-ом введенных символов в поле Заголовка
   var offerTitleElementInputHandler = function () {
     var inputLength = offerTitleElement.value.length;
     var customValidityMessage = '';
@@ -90,24 +98,28 @@
     offerTitleElement.setCustomValidity(customValidityMessage);
   };
 
+  // сбрасывает форму
+  var resetForm = function () {
+    setTimeout(function () {
+      formOfferElement.reset();
+    });
+  };
+
+  // обработка нажатия "отправить форму". PS форма отправляется на сервер без перезагрузки страницы
   var formOfferElementSubmitHandler = function (event) {
-    var isValid = false;
+    event.preventDefault();
 
     syncMinPrice(priceCountElement, housingTypeElement.value);
     syncCapacityCount(capacityCountElement, roomNumberElement.value);
 
-    isValid = priceCountElement.validity.valid && formAddressElement.value.length !== 0;
+    var isValid = priceCountElement.validity.valid && formAddressElement.value !== '';
 
     if (formAddressElement.value === '') {
       formAddressElement.style.border = dataModule.inputStatus.IS_ERROR;
     }
 
-    if (!isValid) {
-      event.preventDefault();
-    } else {
-      setTimeout(function () {
-        formOfferElement.reset();
-      });
+    if (isValid) {
+      backendModule.save(new FormData(formOfferElement), resetForm, renderErrorMessage);
     }
   };
 
