@@ -4,7 +4,7 @@
   var backendModule = window.backend;
   var dataModule = window.data;
   var synchronizeFieldsModule = window.synchronizeFields;
-  var errorMessage = window.errorMessage;
+  var renderErrorMessage = window.renderErrorMessage;
 
   var checkInElement = document.querySelector('#timein');
   var checkOutElement = document.querySelector('#timeout');
@@ -119,7 +119,7 @@
     }
 
     if (isValid) {
-      backendModule.save(new FormData(formOfferElement), resetForm, errorMessage);
+      backendModule.save(new FormData(formOfferElement), resetForm, renderErrorMessage);
     }
   };
 
