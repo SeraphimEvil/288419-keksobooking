@@ -61,8 +61,8 @@
     return checkedFeatures;
   };
 
-  var startFiltration = function () {
-    var filteredPins = dataModule.pinMarkerArr.filter(function (pin) {
+  var getFilteredPins = function () {
+    return dataModule.pinMarkerArr.filter(function (pin) {
       if (filterByValue(pin, housingType.value, 'type')) {
         if (filterByValue(pin, housingRoomNumber.value, 'rooms', true)) {
           if (filterByValue(pin, housingGuestNumber.value, 'guests', true)) {
@@ -77,6 +77,10 @@
 
       return false;
     });
+  };
+
+  var startFiltration = function () {
+    var filteredPins = getFilteredPins();
 
     pinModule.renderPinMarkers(filteredPins);
     cardModule.closeDialog();
