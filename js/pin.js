@@ -9,6 +9,7 @@
   var pinMapElement = document.querySelector('.tokyo__pin-map');
   var pinMapMainElement = pinMapElement.querySelector('.pin.pin__main');
   var activePinElement;
+  var filterContainer = document.querySelector('.tokyo__filters-container');
 
   var createPinMarker = function (pin, pinNumber) {
     var pinMarker = pinTemplateElement.cloneNode(true);
@@ -37,25 +38,39 @@
     }
   };
 
-  var renderPinMarker = function (pins) {
+  var renderLoadedPinMarkers = function (pins) {
+    dataModule.pinMarkerArr = pins;
+    renderPinMarkers(pins);
+    filterContainer.classList.remove('hidden');
+  };
+
+  var renderPinMarkers = function (pins) {
+    var visiblePins = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
     var fragmentElement = document.createDocumentFragment();
 
-    for (var i = 0; i < pins.length; i++) {
-      var currentPinMarker = pins[i];
-      fragmentElement.appendChild(createPinMarker(currentPinMarker, i));
-      dataModule.pinMarkerArr.push(currentPinMarker);
+    if (visiblePins.length) {
+      visiblePins.forEach(function (element) {
+        element.remove();
+      });
     }
+
+    pins.forEach(function (element) {
+      var dataNumber = dataModule.pinMarkerArr.indexOf(element);
+      fragmentElement.appendChild(createPinMarker(element, dataNumber));
+    });
 
     pinMapElement.appendChild(fragmentElement);
   };
 
-  backendModule.load(renderPinMarker, renderErrorMessage);
+  filterContainer.classList.add('hidden');
+  backendModule.load(renderLoadedPinMarkers, renderErrorMessage);
 
   window.pin = {
     activePinElement: activePinElement,
     pinMapMainElement: pinMapMainElement,
     pinMapElement: pinMapElement,
     setActivePin: setActivePin,
-    removeActivePin: removeActivePin
+    removeActivePin: removeActivePin,
+    renderPinMarkers: renderPinMarkers
   };
 })();
