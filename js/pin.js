@@ -45,6 +45,7 @@
   };
 
   var renderPinMarkers = function (pins) {
+    // console.log(viewObjCount)
     var visiblePinsList = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
     var visiblePinsArray = Array.prototype.slice.call(visiblePinsList);
     var fragmentElement = document.createDocumentFragment();

@@ -21,12 +21,11 @@
           return pin.offer[filterName] === filterValue;
         case dataModule.filterValues.ROOMS:
           return pin.offer[filterName] === parseInt(filterValue, 10);
-        case dataModule.filterValues.GUESTS:
-          return pin.offer[filterName] === parseInt(filterValue, 10);
         default:
-          return true;
+          return pin.offer[filterName] === parseInt(filterValue, 10);
       }
     }
+
     return true;
   };
 
@@ -44,28 +43,15 @@
   };
 
   var filterByFeatures = function (pin) {
-    var checkedFeatures = getCheckedFeatures();
-    var reducedCheckedFeauteres = getReducedCheckedFeauteres(checkedFeatures, pin);
+    var isCheckedFeatures = housingFeaturesArr
+        .filter(function (element) {
+          return element.checked;
+        })
+        .every(function (element) {
+          return pin.offer.features.indexOf(element.value) !== -1;
+        });
 
-    return reducedCheckedFeauteres;
-  };
-
-  var getCheckedFeatures = function () {
-    var array = [];
-
-    housingFeaturesArr.forEach(function (element) {
-      if (element.checked) {
-        array.push(element.value);
-      }
-    });
-
-    return array;
-  };
-
-  var getReducedCheckedFeauteres = function (checkedFeatures, pin) {
-    return checkedFeatures.reduce(function (sum, element) {
-      return sum && pin.offer.features.indexOf(element) !== -1;
-    }, true);
+    return isCheckedFeatures;
   };
 
   var getFilteredPins = function () {

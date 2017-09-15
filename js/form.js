@@ -132,6 +132,7 @@
   formOfferElement.addEventListener('submit', formOfferElementSubmitHandler);
 
   window.form = {
-    formAddressElement: formAddressElement
+    formAddressElement: formAddressElement,
+    getRandomNumber: getRandomNumber
   };
 })();
