@@ -45,11 +45,12 @@
   };
 
   var renderPinMarkers = function (pins) {
-    var visiblePins = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
+    var visiblePinsList = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
+    var visiblePinsArray = Array.prototype.slice.call(visiblePinsList);
     var fragmentElement = document.createDocumentFragment();
 
-    if (visiblePins.length) {
-      visiblePins.forEach(function (element) {
+    if (visiblePinsArray.length > 0) {
+      visiblePinsArray.forEach(function (element) {
         element.remove();
       });
     }

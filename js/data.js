@@ -44,6 +44,19 @@
     HIGH_START: 50000
   };
 
+  var filterPricesCategory = {
+    LOW: 'low',
+    MIDDLE: 'middle',
+    HIGH: 'high'
+  };
+
+  var filterValues = {
+    ANY: 'any',
+    TYPE: 'type',
+    ROOMS: 'rooms',
+    GUESTS: 'guests'
+  };
+
   var pinMarkerArr = [];
 
   window.data = {
@@ -54,6 +67,8 @@
     housingType: housingType,
     pinLocationCorrection: pinLocationCorrection,
     inputStatus: inputStatus,
-    filterPrices: filterPrices
+    filterPrices: filterPrices,
+    filterPricesCategory: filterPricesCategory,
+    filterValues: filterValues
   };
 })();

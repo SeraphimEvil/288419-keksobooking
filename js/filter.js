@@ -6,76 +6,75 @@
   var cardModule = window.card;
   var startDebounce = window.startDebounce;
 
-  var mapFilter = document.querySelector('.tokyo__filters');
-  var housingType = mapFilter.querySelector('#housing_type');
-  var housingPrice = mapFilter.querySelector('#housing_price');
-  var housingRoomNumber = mapFilter.querySelector('#housing_room-number');
-  var housingGuestNumber = mapFilter.querySelector('#housing_guests-number');
-  var housingFeaturesList = mapFilter.querySelectorAll('#housing_features input[type="checkbox"]');
+  var mapFilterElement = document.querySelector('.tokyo__filters');
+  var housingTypeElement = mapFilterElement.querySelector('#housing_type');
+  var housingPriceElement = mapFilterElement.querySelector('#housing_price');
+  var housingRoomNumberElement = mapFilterElement.querySelector('#housing_room-number');
+  var housingGuestNumberElement = mapFilterElement.querySelector('#housing_guests-number');
+  var housingFeaturesList = mapFilterElement.querySelectorAll('#housing_features input[type="checkbox"]');
   var housingFeaturesArr = Array.prototype.slice.call(housingFeaturesList);
 
-  var filterByValue = function (pin, filterValue, filterName, isInt) {
-    return filterValue === 'any' || (isInt ? pin.offer[filterName] === parseInt(filterValue, 10) : pin.offer[filterName] === filterValue);
+  var filterByValue = function (pin, filterValue, filterName) {
+    if (filterValue !== dataModule.filterValues.ANY) {
+      switch (filterName) {
+        case dataModule.filterValues.TYPE:
+          return pin.offer[filterName] === filterValue;
+        case dataModule.filterValues.ROOMS:
+          return pin.offer[filterName] === parseInt(filterValue, 10);
+        case dataModule.filterValues.GUESTS:
+          return pin.offer[filterName] === parseInt(filterValue, 10);
+        default:
+          return true;
+      }
+    }
+    return true;
   };
 
   var filterByPrice = function (pin) {
-    switch (housingPrice.value) {
-      case 'low':
+    switch (housingPriceElement.value) {
+      case dataModule.filterPricesCategory.LOW:
         return pin.offer.price < dataModule.filterPrices.MIDDLE_START;
-      case 'high':
+      case dataModule.filterPricesCategory.HIGH:
         return pin.offer.price > dataModule.filterPrices.HIGH_START;
-      case 'middle':
-        return pin.offer.price > dataModule.filterPrices.MIDDLE_START && pin.offer.price < dataModule.filterPrices.HIGH_START;
+      case dataModule.filterPricesCategory.MIDDLE:
+        return pin.offer.price >= dataModule.filterPrices.MIDDLE_START && pin.offer.price <= dataModule.filterPrices.HIGH_START;
       default:
-        return pin.offer.price;
+        return true;
     }
   };
 
   var filterByFeatures = function (pin) {
-    var checkedFeatures = [];
+    var checkedFeatures = getCheckedFeatures();
+    var reducedCheckedFeauteres = getReducedCheckedFeauteres(checkedFeatures, pin);
 
-    pushInCheckedFeatures(checkedFeatures);
-
-    if (checkedFeatures.length) {
-      var isChecked = true;
-
-      checkedFeatures.forEach(function (element) {
-        if (pin.offer.features.indexOf(element) === -1) {
-          isChecked = false;
-        }
-      });
-
-      return isChecked;
-    }
-
-    return true;
+    return reducedCheckedFeauteres;
   };
 
-  var pushInCheckedFeatures = function (checkedFeatures) {
+  var getCheckedFeatures = function () {
+    var array = [];
+
     housingFeaturesArr.forEach(function (element) {
       if (element.checked) {
-        checkedFeatures.push(element.value);
+        array.push(element.value);
       }
     });
 
-    return checkedFeatures;
+    return array;
+  };
+
+  var getReducedCheckedFeauteres = function (checkedFeatures, pin) {
+    return checkedFeatures.reduce(function (sum, element) {
+      return sum && pin.offer.features.indexOf(element) !== -1;
+    }, true);
   };
 
   var getFilteredPins = function () {
     return dataModule.pinMarkerArr.filter(function (pin) {
-      if (filterByValue(pin, housingType.value, 'type')) {
-        if (filterByValue(pin, housingRoomNumber.value, 'rooms', true)) {
-          if (filterByValue(pin, housingGuestNumber.value, 'guests', true)) {
-            if (filterByPrice(pin)) {
-              if (filterByFeatures(pin)) {
-                return pin;
-              }
-            }
-          }
-        }
-      }
-
-      return false;
+      return filterByValue(pin, housingTypeElement.value, 'type')
+          && filterByValue(pin, housingRoomNumberElement.value, 'rooms')
+          && filterByValue(pin, housingGuestNumberElement.value, 'guests')
+          && filterByPrice(pin)
+          && filterByFeatures(pin);
     });
   };
 
@@ -86,25 +85,7 @@
     cardModule.closeDialog();
   };
 
-  housingType.addEventListener('change', function () {
+  mapFilterElement.addEventListener('change', function () {
     startDebounce(startFiltration);
-  });
-
-  housingPrice.addEventListener('change', function () {
-    startDebounce(startFiltration);
-  });
-
-  housingRoomNumber.addEventListener('change', function () {
-    startDebounce(startFiltration);
-  });
-
-  housingGuestNumber.addEventListener('change', function () {
-    startDebounce(startFiltration);
-  });
-
-  housingFeaturesArr.forEach(function (element) {
-    element.addEventListener('change', function () {
-      startDebounce(startFiltration);
-    });
   });
 })();
