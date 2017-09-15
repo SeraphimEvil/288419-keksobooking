@@ -49,11 +49,9 @@
     var visiblePinsArray = Array.prototype.slice.call(visiblePinsList);
     var fragmentElement = document.createDocumentFragment();
 
-    if (visiblePinsArray.length > 0) {
-      visiblePinsArray.forEach(function (element) {
-        element.remove();
-      });
-    }
+    visiblePinsArray.forEach(function (element) {
+      element.remove();
+    });
 
     pins.forEach(function (element) {
       var dataNumber = dataModule.pinMarkerArr.indexOf(element);
