@@ -57,10 +57,10 @@
     GUESTS: 'guests'
   };
 
-  var pinMarkerArr = [];
+  var pinMarkersArray = [];
 
   window.data = {
-    pinMarkerArr: pinMarkerArr,
+    pinMarkersArray: pinMarkersArray,
     prices: prices,
     capacityCount: capacityCount,
     roomsCount: roomsCount,

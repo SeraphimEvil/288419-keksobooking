@@ -37,7 +37,7 @@
 
   var renderLodgeView = function (num) {
     var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
-    var lodgePanelItem = dataModule.pinMarkerArr[num];
+    var lodgePanelItem = dataModule.pinMarkersArray[num];
 
     dialogElement.replaceChild(renderLodge(lodgePanelItem), lodgePanelElement);
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
@@ -47,7 +47,7 @@
     var lodgeElement = lodgeTemplateElement.cloneNode(true);
     var lodgeTitle = pin.offer.title;
     var lodgeAddress = pin.offer.address;
-    var lodgePrice = pin.offer.price + '  &#x20bd;/ночь';
+    var lodgePrice = pin.offer.price + ' ₽/ночь';
     var lodgeType = getPinOfferTypeTranslate(pin.offer.type);
     var lodgeGuestsAndRooms = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
     var lodgeCheckinCheckout = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
@@ -56,7 +56,7 @@
 
     lodgeElement.querySelector('.lodge__title').textContent = lodgeTitle;
     lodgeElement.querySelector('.lodge__address').textContent = lodgeAddress;
-    lodgeElement.querySelector('.lodge__price').innerHTML = lodgePrice;
+    lodgeElement.querySelector('.lodge__price').textContent = lodgePrice;
     lodgeElement.querySelector('.lodge__type').textContent = lodgeType;
     lodgeElement.querySelector('.lodge__rooms-and-guests').textContent = lodgeGuestsAndRooms;
     lodgeElement.querySelector('.lodge__checkin-time').textContent = lodgeCheckinCheckout;

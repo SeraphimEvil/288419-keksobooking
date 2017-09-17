@@ -39,7 +39,7 @@
   };
 
   var renderLoadedPinMarkers = function (pins) {
-    dataModule.pinMarkerArr = pins;
+    dataModule.pinMarkersArray = pins;
     renderPinMarkers(pins);
     filterContainer.classList.remove('hidden');
   };
@@ -54,7 +54,7 @@
     });
 
     pins.forEach(function (element) {
-      var dataNumber = dataModule.pinMarkerArr.indexOf(element);
+      var dataNumber = dataModule.pinMarkersArray.indexOf(element);
       fragmentElement.appendChild(createPinMarker(element, dataNumber));
     });
 
