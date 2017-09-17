@@ -32,7 +32,7 @@
         minPriceValue = dataModule.prices.ONE_THOUSAND;
         break;
       case dataModule.housingType.HOUSE:
-        minPriceValue = dataModule.prices.FIVE_THOUSAND;
+        minPriceValue = dataModule.prices.TEN_THOUSAND;
         break;
       case dataModule.housingType.PALACE:
         minPriceValue = dataModule.prices.TEN_THOUSAND;
