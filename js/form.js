@@ -38,7 +38,7 @@
   };
 
   var syncCapacityCount = function (roomsNumber) {
-    var availableValues = dataModule.AVAILABLE_GIESTS[roomsNumber];
+    var availableValues = dataModule.AVAILABLE_GUESTS[roomsNumber];
     var guestsCount = 0;
     var capacityCountOptions = capacityCountElement.querySelectorAll('option');
 
