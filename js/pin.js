@@ -44,7 +44,7 @@
     filterContainer.classList.remove('hidden');
   };
 
-  var removeVisiblePinElements = function (element) {
+  var removeVisiblePinElement = function (element) {
     element.remove();
   };
 
@@ -52,7 +52,7 @@
     var visiblePinElements = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
     var fragmentElement = document.createDocumentFragment();
 
-    Array.prototype.forEach.call(visiblePinElements, removeVisiblePinElements);
+    Array.prototype.forEach.call(visiblePinElements, removeVisiblePinElement);
 
     pins.forEach(function (element) {
       var dataNumber = dataModule.pinMarkers.indexOf(element);

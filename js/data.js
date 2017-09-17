@@ -18,18 +18,11 @@
     PALACE: 'palace'
   };
 
-  var roomsCount = {
-    ONE: '1',
-    TWO: '2',
-    THREE: '3',
-    ALL: '100'
-  };
-
-  var capacityCount = {
-    ZERO: '0',
-    ONE: '1',
-    TWO: '2',
-    THREE: '3'
+  var availableGuests = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
   };
 
   var prices = {
@@ -62,8 +55,7 @@
   window.data = {
     pinMarkers: pinMarkers,
     prices: prices,
-    capacityCount: capacityCount,
-    roomsCount: roomsCount,
+    availableGuests: availableGuests,
     housingType: housingType,
     pinLocationCorrection: pinLocationCorrection,
     inputStatus: inputStatus,

@@ -19,8 +19,6 @@
       switch (filterName) {
         case dataModule.filterValues.TYPE:
           return pin.offer[filterName] === filterValue;
-        case dataModule.filterValues.ROOMS:
-          return pin.offer[filterName] === parseInt(filterValue, 10);
         default:
           return pin.offer[filterName] === parseInt(filterValue, 10);
       }

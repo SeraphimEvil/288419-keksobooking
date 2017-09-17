@@ -16,10 +16,6 @@
   var formAddressElement = document.querySelector('#address');
   var formOfferElement = document.querySelector('.notice__form');
 
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
-  };
-
   var syncValue = function (element, value) {
     element.value = value;
   };
@@ -41,42 +37,25 @@
     element.min = minPriceValue;
   };
 
-  var syncCapacityCount = function (element, value) {
-    var roomsValue = 1;
+  var syncCapacityCount = function (roomsNumber) {
+    var availableValues = dataModule.availableGuests[roomsNumber];
+    var guestsCount = 0;
+    var capacityCountOptions = capacityCountElement.querySelectorAll('option');
 
-    switch (value) {
-      case dataModule.roomsCount.TWO:
-        roomsValue = getRandomNumber(1, 2);
-        break;
-      case dataModule.roomsCount.THREE:
-        roomsValue = getRandomNumber(1, 3);
-        break;
-      case dataModule.roomsCount.ALL:
-        roomsValue = 0;
-    }
+    Array.prototype.forEach.call(capacityCountOptions, function (element) {
+      if (availableValues.indexOf(element.value) === -1) {
+        element.hidden = true;
+      } else {
+        element.hidden = false;
+        guestsCount = element.value > guestsCount ? element.value : guestsCount;
+      }
+    });
 
-    element.value = roomsValue;
+    capacityCountElement.value = guestsCount;
   };
 
-  var syncRoomCount = function (element, value) {
-
-    var capacityValue = 1;
-
-    switch (value) {
-      case dataModule.capacityCount.ONE:
-        capacityValue = getRandomNumber(1, 3);
-        break;
-      case dataModule.capacityCount.TWO:
-        capacityValue = getRandomNumber(2, 3);
-        break;
-      case dataModule.capacityCount.THREE:
-        capacityValue = 3;
-        break;
-      case dataModule.capacityCount.ZERO:
-        capacityValue = 100;
-    }
-
-    element.value = capacityValue;
+  var roomNumberElementChangeHandler = function () {
+    syncCapacityCount(roomNumberElement.value);
   };
 
   var offerTitleElementInputHandler = function () {
@@ -98,12 +77,8 @@
     });
   };
 
-  // обработка нажатия "отправить форму". PS форма отправляется на сервер без перезагрузки страницы
   var formOfferElementSubmitHandler = function (event) {
     event.preventDefault();
-
-    syncMinPrice(priceCountElement, housingTypeElement.value);
-    syncCapacityCount(capacityCountElement, roomNumberElement.value);
 
     var isValid = priceCountElement.validity.valid && formAddressElement.value !== '';
 
@@ -119,13 +94,11 @@
   synchronizeFieldsModule(checkInElement, checkOutElement, syncValue);
   synchronizeFieldsModule(checkOutElement, checkInElement, syncValue);
   synchronizeFieldsModule(housingTypeElement, priceCountElement, syncMinPrice);
-  synchronizeFieldsModule(roomNumberElement, capacityCountElement, syncCapacityCount);
-  synchronizeFieldsModule(capacityCountElement, roomNumberElement, syncRoomCount);
+  roomNumberElement.addEventListener('change', roomNumberElementChangeHandler);
   offerTitleElement.addEventListener('input', offerTitleElementInputHandler);
   formOfferElement.addEventListener('submit', formOfferElementSubmitHandler);
 
   window.form = {
-    formAddressElement: formAddressElement,
-    getRandomNumber: getRandomNumber
+    formAddressElement: formAddressElement
   };
 })();
