@@ -55,7 +55,7 @@
   };
 
   var getFilteredPins = function () {
-    return dataModule.pinMarkersArray.filter(function (pin) {
+    return dataModule.pinMarkers.filter(function (pin) {
       return filterByValue(pin, housingTypeElement.value, 'type')
           && filterByValue(pin, housingRoomNumberElement.value, 'rooms')
           && filterByValue(pin, housingGuestNumberElement.value, 'guests')

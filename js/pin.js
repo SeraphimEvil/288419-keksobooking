@@ -39,22 +39,22 @@
   };
 
   var renderLoadedPinMarkers = function (pins) {
-    dataModule.pinMarkersArray = pins;
+    dataModule.pinMarkers = pins;
     renderPinMarkers(pins);
     filterContainer.classList.remove('hidden');
   };
 
   var renderPinMarkers = function (pins) {
     var visiblePinsList = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
-    var visiblePinsArray = Array.prototype.slice.call(visiblePinsList);
+    var visiblePins = Array.prototype.slice.call(visiblePinsList);
     var fragmentElement = document.createDocumentFragment();
 
-    visiblePinsArray.forEach(function (element) {
+    visiblePins.forEach(function (element) {
       element.remove();
     });
 
     pins.forEach(function (element) {
-      var dataNumber = dataModule.pinMarkersArray.indexOf(element);
+      var dataNumber = dataModule.pinMarkers.indexOf(element);
       fragmentElement.appendChild(createPinMarker(element, dataNumber));
     });
 

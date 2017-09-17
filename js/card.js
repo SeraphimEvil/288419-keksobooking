@@ -37,7 +37,7 @@
 
   var renderLodgeView = function (num) {
     var lodgePanelElement = dialogElement.querySelector('.dialog__panel');
-    var lodgePanelItem = dataModule.pinMarkersArray[num];
+    var lodgePanelItem = dataModule.pinMarkers[num];
 
     dialogElement.replaceChild(renderLodge(lodgePanelItem), lodgePanelElement);
     lodgePanelAvatar.src = lodgePanelItem.author.avatar;
