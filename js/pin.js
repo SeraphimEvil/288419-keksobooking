@@ -44,14 +44,15 @@
     filterContainer.classList.remove('hidden');
   };
 
+  var removeVisiblePinElements = function (element) {
+    element.remove();
+  };
+
   var renderPinMarkers = function (pins) {
-    var visiblePinsList = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
-    var visiblePins = Array.prototype.slice.call(visiblePinsList);
+    var visiblePinElements = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
     var fragmentElement = document.createDocumentFragment();
 
-    visiblePins.forEach(function (element) {
-      element.remove();
-    });
+    Array.prototype.forEach.call(visiblePinElements, removeVisiblePinElements);
 
     pins.forEach(function (element) {
       var dataNumber = dataModule.pinMarkers.indexOf(element);
