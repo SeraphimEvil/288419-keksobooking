@@ -18,7 +18,7 @@
     PALACE: 'palace'
   };
 
-  var availableGuests = {
+  var AVAILABLE_GIESTS = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
@@ -55,7 +55,7 @@
   window.data = {
     pinMarkers: pinMarkers,
     prices: prices,
-    availableGuests: availableGuests,
+    AVAILABLE_GIESTS: AVAILABLE_GIESTS,
     housingType: housingType,
     pinLocationCorrection: pinLocationCorrection,
     inputStatus: inputStatus,

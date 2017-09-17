@@ -38,9 +38,33 @@
     }
   };
 
+  var getRandomPins = function (pins) {
+    var pinsCount = 3;
+    var newArr = [];
+    var smthArr = [];
+
+    for (var i = 0; i < pinsCount; i++) {
+      var newArrNum = getRandomNum(pins);
+
+      if (smthArr.indexOf(newArrNum) === -1) {
+        smthArr.push(newArrNum);
+        newArr.push(pins[newArrNum]);
+      } else {
+        i--;
+      }
+    }
+
+    return newArr;
+  };
+
+  var getRandomNum = function (arr) {
+    return Math.floor(Math.random() * (arr.length));
+  };
+
   var renderLoadedPinMarkers = function (pins) {
     dataModule.pinMarkers = pins;
-    renderPinMarkers(pins);
+    var randomPins = getRandomPins(dataModule.pinMarkers);
+    renderPinMarkers(randomPins);
     filterContainer.classList.remove('hidden');
   };
 
