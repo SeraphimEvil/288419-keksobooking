@@ -40,47 +40,58 @@
     }
   };
 
-  var getRandomPins = function (pins) {
-    var pinsCopy = pins.slice();
-    var randomPins = [];
-    var splicePins = [];
+  var getRandomNumbers = function (pins) {
+    var pinsLength = pins.length;
+    var nums = [];
 
-    for (var i = 0; i < PINS_COUNT; i++) {
-      var pinsLength = pinsCopy.length;
-      var pinPos = getRandomArrayPos(pinsLength);
+    while (nums.length < PINS_COUNT) {
+      var randomNumber = getRandomNumber(1, pinsLength);
 
-      splicePins = pinsCopy.splice(pinPos, 1);
-      randomPins = splicePins.concat(randomPins);
+      if (nums.indexOf(randomNumber) === -1) {
+        nums.push(randomNumber);
+      }
     }
 
-    return randomPins;
+    return nums;
   };
 
-  var getRandomArrayPos = function (arrLength) {
-    return Math.floor(Math.random() * arrLength);
+  var getRandomNumber = function (min, max) {
+    return Math.floor(min + Math.random() * (max - min));
   };
 
   var renderLoadedPinMarkers = function (pins) {
+    var randomNumbers = getRandomNumbers(pins);
     dataModule.pinMarkers = pins;
-    var randomPins = getRandomPins(dataModule.pinMarkers);
-    renderPinMarkers(randomPins);
+
     filterContainer.classList.remove('hidden');
+    renderPinMarkers(pins, randomNumbers);
   };
 
   var removeVisiblePinElement = function (element) {
     element.remove();
   };
 
-  var renderPinMarkers = function (pins) {
+  var renderPinMarkers = function (pins, randomNumbers) {
     var visiblePinElements = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
     var fragmentElement = document.createDocumentFragment();
 
     Array.prototype.forEach.call(visiblePinElements, removeVisiblePinElement);
 
-    pins.forEach(function (element) {
-      var dataNumber = dataModule.pinMarkers.indexOf(element);
-      fragmentElement.appendChild(createPinMarker(element, dataNumber));
-    });
+    if (randomNumbers) {
+      var randomPins = randomNumbers.map(function (element) {
+        return pins[element];
+      });
+
+      randomPins.forEach(function (element) {
+        var dataNumber = dataModule.pinMarkers.indexOf(element);
+        fragmentElement.appendChild(createPinMarker(element, dataNumber));
+      });
+    } else {
+      pins.forEach(function (element) {
+        var dataNumber = dataModule.pinMarkers.indexOf(element);
+        fragmentElement.appendChild(createPinMarker(element, dataNumber));
+      });
+    }
 
     pinMapElement.appendChild(fragmentElement);
   };
