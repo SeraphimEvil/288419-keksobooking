@@ -49,10 +49,9 @@
     for (var i = 0; i < PINS_COUNT; i++) {
       var pinsLength = pinsCopy.length;
       var pinPos = getRandomArrayPos(pinsLength);
-      var pinElement = pinsCopy[pinPos];
 
       pinsCopy.splice(pinPos, 1);
-      randomPins.push(pinElement);
+      randomPins.push(pinsCopy[pinPos]);
     }
 
     return randomPins;
