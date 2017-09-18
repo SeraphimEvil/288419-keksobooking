@@ -40,21 +40,21 @@
 
   var getRandomPins = function (pins) {
     var pinsCount = 3;
-    var newArr = [];
-    var smthArr = [];
+    var randomPins = [];
+    var randomNumbers = [];
 
     for (var i = 0; i < pinsCount; i++) {
-      var newArrNum = getRandomNum(pins);
+      var randomNumber = getRandomNum(pins);
 
-      if (smthArr.indexOf(newArrNum) === -1) {
-        smthArr.push(newArrNum);
-        newArr.push(pins[newArrNum]);
+      if (randomNumbers.indexOf(randomNumber) === -1) {
+        randomNumbers.push(randomNumber);
+        randomPins.push(pins[randomNumber]);
       } else {
         i--;
       }
     }
 
-    return newArr;
+    return randomPins;
   };
 
   var getRandomNum = function (arr) {
