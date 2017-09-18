@@ -6,8 +6,6 @@
   var renderErrorMessage = window.renderErrorMessage;
 
   var PINS_COUNT = 3;
-  // var randomPins = [];
-
 
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
@@ -45,13 +43,14 @@
   var getRandomPins = function (pins) {
     var pinsCopy = pins.slice();
     var randomPins = [];
+    var splicePins = [];
 
     for (var i = 0; i < PINS_COUNT; i++) {
       var pinsLength = pinsCopy.length;
       var pinPos = getRandomArrayPos(pinsLength);
 
-      pinsCopy.splice(pinPos, 1);
-      randomPins.push(pinsCopy[pinPos]);
+      splicePins = pinsCopy.splice(pinPos, 1);
+      randomPins = splicePins.concat(randomPins);
     }
 
     return randomPins;
