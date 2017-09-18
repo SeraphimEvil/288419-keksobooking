@@ -5,6 +5,10 @@
   var backendModule = window.backend;
   var renderErrorMessage = window.renderErrorMessage;
 
+  var PINS_COUNT = 3;
+  // var randomPins = [];
+
+
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
   var pinMapMainElement = pinMapElement.querySelector('.pin.pin__main');
@@ -39,26 +43,23 @@
   };
 
   var getRandomPins = function (pins) {
-    var pinsCount = 3;
+    var pinsCopy = pins.slice();
     var randomPins = [];
-    var randomNumbers = [];
 
-    for (var i = 0; i < pinsCount; i++) {
-      var randomNumber = getRandomNum(pins);
+    for (var i = 0; i < PINS_COUNT; i++) {
+      var pinsLength = pinsCopy.length;
+      var pinPos = getRandomArrayPos(pinsLength);
+      var pinElement = pinsCopy[pinPos];
 
-      if (randomNumbers.indexOf(randomNumber) === -1) {
-        randomNumbers.push(randomNumber);
-        randomPins.push(pins[randomNumber]);
-      } else {
-        i--;
-      }
+      pinsCopy.splice(pinPos, 1);
+      randomPins.push(pinElement);
     }
 
     return randomPins;
   };
 
-  var getRandomNum = function (arr) {
-    return Math.floor(Math.random() * (arr.length));
+  var getRandomArrayPos = function (arrLength) {
+    return Math.floor(Math.random() * arrLength);
   };
 
   var renderLoadedPinMarkers = function (pins) {
