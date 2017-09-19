@@ -37,7 +37,6 @@
         action();
       }
     },
-    getRandomNumber: getRandomNumber,
     getRandomNumbers: getRandomNumbers
   };
 })();
