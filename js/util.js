@@ -6,9 +6,7 @@
     ENTER: 13
   };
 
-  var PINS_COUNT = 3;
-
-  var getRandomNumbers = function (pinsLength) {
+  var getRandomNumbers = function (pinsLength, PINS_COUNT) {
     var nums = [];
 
     while (nums.length < PINS_COUNT) {

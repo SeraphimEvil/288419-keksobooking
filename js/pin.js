@@ -6,6 +6,8 @@
   var renderErrorMessage = window.renderErrorMessage;
   var utilModule = window.util;
 
+  var PINS_COUNT = 3;
+
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
   var pinMapMainElement = pinMapElement.querySelector('.pin.pin__main');
@@ -46,11 +48,19 @@
   };
 
   var renderLoadedPinMarkers = function (pins) {
-    var randomNumbers = utilModule.getRandomNumbers(pins.length);
+    var renderPins;
     dataModule.pinMarkers = pins;
 
     filterContainer.classList.remove('hidden');
-    renderPinMarkers(getRandomPins(randomNumbers));
+
+    if (pins.length > PINS_COUNT) {
+      var randomNumbers = utilModule.getRandomNumbers(pins.length, PINS_COUNT);
+      renderPins = getRandomPins(randomNumbers);
+    } else {
+      renderPins = pins;
+    }
+
+    renderPinMarkers(renderPins);
   };
 
   var removeVisiblePinElement = function (element) {
