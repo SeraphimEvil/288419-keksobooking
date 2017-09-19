@@ -5,7 +5,6 @@
   var dataModule = window.data;
 
   var lodgeTemplateElement = document.querySelector('#lodge-template').content;
-  var featuresTemplateElement = document.querySelector('#lodge-features').content;
   var dialogElement = document.querySelector('#offer-dialog');
   var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
