@@ -6,12 +6,12 @@
     ENTER: 13
   };
 
-  var getRandomNumbers = function (pinsLength, PINS_COUNT) {
+  var getRandomNumbers = function (count, maxCount) {
     var nums = [];
 
-    if (pinsLength >= PINS_COUNT) {
-      while (nums.length < PINS_COUNT) {
-        var randomNumber = getRandomNumber(1, pinsLength);
+    if (count >= maxCount) {
+      while (nums.length < maxCount) {
+        var randomNumber = getRandomNumber(1, count);
 
         if (nums.indexOf(randomNumber) === -1) {
           nums.push(randomNumber);
