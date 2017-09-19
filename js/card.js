@@ -5,6 +5,7 @@
   var dataModule = window.data;
 
   var lodgeTemplateElement = document.querySelector('#lodge-template').content;
+  var featuresTemplateElement = document.querySelector('#lodge-features').content;
   var dialogElement = document.querySelector('#offer-dialog');
   var lodgePanelAvatar = dialogElement.querySelector('.dialog__title img');
   var dialogCloseElement = dialogElement.querySelector('.dialog__close');
@@ -45,13 +46,13 @@
 
   var renderLodge = function (pin) {
     var lodgeElement = lodgeTemplateElement.cloneNode(true);
+    var lodgeFeatures = lodgeElement.querySelector('.lodge__features');
     var lodgeTitle = pin.offer.title;
     var lodgeAddress = pin.offer.address;
     var lodgePrice = pin.offer.price + ' ₽/ночь';
     var lodgeType = getPinOfferTypeTranslate(pin.offer.type);
     var lodgeGuestsAndRooms = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
     var lodgeCheckinCheckout = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
-    var lodgeFeatures = renderPinOfferFeauteres(pin.offer.features);
     var lodgeDescription = pin.offer.description;
 
     lodgeElement.querySelector('.lodge__title').textContent = lodgeTitle;
@@ -60,10 +61,20 @@
     lodgeElement.querySelector('.lodge__type').textContent = lodgeType;
     lodgeElement.querySelector('.lodge__rooms-and-guests').textContent = lodgeGuestsAndRooms;
     lodgeElement.querySelector('.lodge__checkin-time').textContent = lodgeCheckinCheckout;
-    lodgeElement.querySelector('.lodge__features').innerHTML = lodgeFeatures;
+    renderFeatures(lodgeFeatures, pin.offer.features);
     lodgeElement.querySelector('.lodge__description').textContent = lodgeDescription;
 
     return lodgeElement;
+  };
+
+  var renderFeatures = function (placement, features) {
+    features.forEach(function (element) {
+      var featuresElement = document.createElement('span');
+
+      featuresElement.classList.add('feature__image');
+      featuresElement.classList.add('feature__image--' + element);
+      placement.appendChild(featuresElement);
+    });
   };
 
   var getPinOfferTypeTranslate = function (offerType) {
@@ -81,12 +92,6 @@
     }
 
     return offerTypeValue;
-  };
-
-  var renderPinOfferFeauteres = function (features) {
-    return features.map(function (item) {
-      return '<span class="feature__image feature__image--' + item + '"></span>';
-    }).join('');
   };
 
   closeDialog();
