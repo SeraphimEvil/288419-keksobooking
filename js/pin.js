@@ -4,8 +4,7 @@
   var dataModule = window.data;
   var backendModule = window.backend;
   var renderErrorMessage = window.renderErrorMessage;
-
-  var PINS_COUNT = 3;
+  var utilModule = window.util;
 
   var pinTemplateElement = document.querySelector('#pin-template').content;
   var pinMapElement = document.querySelector('.tokyo__pin-map');
@@ -40,33 +39,14 @@
     }
   };
 
-  var getRandomNumbers = function (pins) {
-    var pinsLength = pins.length;
-    var nums = [];
-
-    while (nums.length < PINS_COUNT) {
-      var randomNumber = getRandomNumber(1, pinsLength);
-
-      if (nums.indexOf(randomNumber) === -1) {
-        nums.push(randomNumber);
-      }
-    }
-
-    return nums;
-  };
-
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max - min));
-  };
-
-  var getRandomPins = function (indexPins) {
-    return indexPins.map(function (element) {
+  var getRandomPins = function (indexes) {
+    return indexes.map(function (element) {
       return dataModule.pinMarkers[element];
     });
   };
 
   var renderLoadedPinMarkers = function (pins) {
-    var randomNumbers = getRandomNumbers(pins);
+    var randomNumbers = utilModule.getRandomNumbers(pins.length);
     dataModule.pinMarkers = pins;
 
     filterContainer.classList.remove('hidden');
