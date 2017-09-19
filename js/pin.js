@@ -59,39 +59,34 @@
     return Math.floor(min + Math.random() * (max - min));
   };
 
+  var getRandomPins = function (indexPins) {
+    return indexPins.map(function (element) {
+      return dataModule.pinMarkers[element];
+    });
+  };
+
   var renderLoadedPinMarkers = function (pins) {
     var randomNumbers = getRandomNumbers(pins);
     dataModule.pinMarkers = pins;
 
     filterContainer.classList.remove('hidden');
-    renderPinMarkers(pins, randomNumbers);
+    renderPinMarkers(getRandomPins(randomNumbers));
   };
 
   var removeVisiblePinElement = function (element) {
     element.remove();
   };
 
-  var renderPinMarkers = function (pins, randomNumbers) {
+  var renderPinMarkers = function (pins) {
     var visiblePinElements = pinMapElement.querySelectorAll('.pin:not(.pin__main)');
     var fragmentElement = document.createDocumentFragment();
 
     Array.prototype.forEach.call(visiblePinElements, removeVisiblePinElement);
 
-    if (randomNumbers) {
-      var randomPins = randomNumbers.map(function (element) {
-        return pins[element];
-      });
-
-      randomPins.forEach(function (element) {
-        var dataNumber = dataModule.pinMarkers.indexOf(element);
-        fragmentElement.appendChild(createPinMarker(element, dataNumber));
-      });
-    } else {
-      pins.forEach(function (element) {
-        var dataNumber = dataModule.pinMarkers.indexOf(element);
-        fragmentElement.appendChild(createPinMarker(element, dataNumber));
-      });
-    }
+    pins.forEach(function (element) {
+      var dataNumber = dataModule.pinMarkers.indexOf(element);
+      fragmentElement.appendChild(createPinMarker(element, dataNumber));
+    });
 
     pinMapElement.appendChild(fragmentElement);
   };
