@@ -9,11 +9,13 @@
   var getRandomNumbers = function (pinsLength, PINS_COUNT) {
     var nums = [];
 
-    while (nums.length < PINS_COUNT) {
-      var randomNumber = getRandomNumber(1, pinsLength);
+    if (pinsLength >= PINS_COUNT) {
+      while (nums.length < PINS_COUNT) {
+        var randomNumber = getRandomNumber(1, pinsLength);
 
-      if (nums.indexOf(randomNumber) === -1) {
-        nums.push(randomNumber);
+        if (nums.indexOf(randomNumber) === -1) {
+          nums.push(randomNumber);
+        }
       }
     }
 
