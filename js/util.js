@@ -6,12 +6,12 @@
     ENTER: 13
   };
 
-  var getRandomNumbers = function (count, maxCount) {
+  var getRandomNumbers = function (maxCount, count) {
     var nums = [];
 
-    if (count >= maxCount) {
-      while (nums.length < maxCount) {
-        var randomNumber = getRandomNumber(1, count);
+    if (maxCount >= count) {
+      while (nums.length < count) {
+        var randomNumber = getRandomNumber(1, maxCount);
 
         if (nums.indexOf(randomNumber) === -1) {
           nums.push(randomNumber);
