@@ -70,8 +70,8 @@
     features.forEach(function (element) {
       var featuresElement = document.createElement('span');
 
-      featuresElement.classList.add('feature__image');
-      featuresElement.classList.add('feature__image--' + element);
+      featuresElement.classList.add('feature__image', 'feature__image--' + element);
+      // featuresElement.classList.add();
       placement.appendChild(featuresElement);
     });
   };
